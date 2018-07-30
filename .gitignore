@@ -1,0 +1,31 @@
+
+
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!.config
+
+# ...even if they are in subdirectories
+#!*/
+
+build/*
+!build/linux-rpi-4.14.y-rt
+!build/linux-rpi-4.14.y-rt/*
+!build/linux-rpi-4.14.y-rt/.config
+!build/linux-rpi-4.14.y-rt/Makefile
+
+#build  
+#host  
+#images  
+#!Makefile  
+#scripts  
+#staging  
+#target
+#.config.old
+#.br-external.mk
+#..config.tmp
+
+#!*/build/linux-rpi-4.14.y-rt/.config
+#!*/build/linux-rpi-4.14.y-rt/Makefile
