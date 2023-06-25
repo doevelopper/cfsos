@@ -1,22 +1,22 @@
 
 
 # Ignore everything
-*
+#*
 
 # But not these files...
 !.gitignore
-!.config
+#!.config
 
 # ...even if they are in subdirectories
 #!*/
 
-build/*
-!build/linux-rpi-4.14.y-rt
-!build/linux-rpi-4.14.y-rt/*
-!build/linux-rpi-4.14.y-rt/.config
-!build/linux-rpi-4.14.y-rt/Makefile
-
-#build  
+#build/*
+#!build/linux-rpi-4.14.y-rt
+#!build/linux-rpi-4.14.y-rt/*
+#!build/linux-rpi-4.14.y-rt/.config
+#!build/linux-rpi-4.14.y-rt/Makefile
+buildroot-*
+build-*
 #host  
 #images  
 #!Makefile  

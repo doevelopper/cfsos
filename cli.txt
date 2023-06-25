@@ -1,0 +1,664 @@
+ 1363  mkdir embedded
+ 1364  gc c-v
+ 1365  gcc -v
+ 1366  cd embedded/
+ 1367  wget https://github.com/buildroot/buildroot/archive/refs/tags/2023.05.tar.gz
+ 1368  tar -xvzf 2023.05.tar.gz buildroot-2023.05/
+ 1369  LL
+ 1370  ll
+ 1371  mv buildroot-2023.05/ buildroot
+ 1372  ll
+ 1373  ls
+ 1374  ll
+ 1375  python --version
+ 1376  ll
+ 1377  mv -v /home/hroland/Downloads/buildroot-external-packages-master.zip .
+ 1378  extract buildroot-external-packages-master.zip 
+ 1379  ll
+ 1380  mv -v /home/hroland/Downloads/som-external-LRD-REL-7.625.0.62.tar.gz .
+ 1381  ll
+ 1382  extract som-external-LRD-REL-7.625.0.62.tar.gz 
+ 1383  ll
+ 1384  mkdir sources
+ 1385  mv 2023.05.tar.gz buildroot-external-packages-master.zip som-external-LRD-REL-7.625.0.62.tar.gz sources/
+ 1386  ll
+ 1387  cd som-external-LRD-REL-7.625.0.62/
+ 1388  ll
+ 1389  cd ..
+ 1390  ls som-external-LRD-REL-7.625.0.62/
+ 1391  vi  som-external-LRD-REL-7.625.0.62/Makefile 
+ 1392  ll
+ 1393  rm -Rvf som-external-LRD-REL-7.625.0.62/
+ 1394  cd sources/
+ 1395  rm som-external-LRD-REL-7.625.0.62.tar.gz 
+ 1396  mv -v /home/hroland/Downloads/som-external-lrd-10.0.0.x.zip .
+ 1397  extract som-external-lrd-10.0.0.x.zip 
+ 1398  ll
+ 1399  mv som-external-lrd-10.0.0.x ../
+ 1400  ..
+ 1401  mv som-external-lrd-10.0.0.x/ laird-som-external
+ 1402  ll
+ 1403  ls laird-som-external/
+ 1404  ls laird-som-external/ -lah
+ 1405  cd laird-som-external/c
+ 1406  ls configs/
+ 1407  ls board/
+ 1408  ls -lah  board/
+ 1409  ls -lah  board/configs-common/
+ 1410  ls -lah  board/configs-common/image/
+ 1411  vi board/configs-common/image/boot.scr 
+ 1412  vi board/configs-common/image/kernel.its 
+ 1413  ll
+ 1414  ..
+ 1415  clear
+ 1416  ll
+ 1417  history
+ 1418  ll
+ 1419  clear
+ 1420  ls
+ 1421  mkdir  output/{arm_rootfs,armv_v8l}
+ 1422  make -C buildroot O=output/arm_rootfs/ menuconfig
+ 1423  make -C buildroot O=output/arm_rootfs/ 
+ 1424  ll
+ 1425  ls output/
+ 1426  ls output/arm_rootfs/
+ 1427  ls output/armv_v8l/
+ 1428  ls ARMv8
+ 1429  ls output/armv_v8l/
+ 1430  ls output/
+ 1431  ls output/arm_rootfs/
+ 1432  ls -lah output/arm_rootfs/
+ 1433  ls home/hroland/developpements/embedded/buildroot/output/arm_rootfs/build/buildroot-fs/t
+ 1434  ls home/hroland/developpements/embedded/buildroot/output/arm_rootfs/build/buildroot-fs/
+ 1435  ls home/hroland/developpements/embedded/buildroot/output/arm_rootfs/build/
+ 1436  ls /home/hroland/developpements/embedded/buildroot/output/arm_rootfs/build/
+ 1437  ls /home/hroland/developpements/embedded/buildroot/output/arm_rootfs/
+ 1438  ls /home/hroland/developpements/embedded/buildroot/output/arm_rootfs/build/
+ 1439  ls /home/hroland/developpements/embedded/buildroot/output/arm_rootfs/images/
+ 1440  la -lah /home/hroland/developpements/embedded/buildroot/output/arm_rootfs/images/
+ 1441  ll
+ 1442  make -C buildroot O=output/arm_rootfs/ menuconfig
+ 1443  ll
+ 1444  ls /home/hroland/Downloads/
+ 1445  ls-lah  /home/hroland/Downloads/
+ 1446  ls -lah  /home/hroland/Downloads/
+ 1447  mv -v /home/hroland/Downloads/*.zip sources/
+ 1448  ls -lah  /home/hroland/Downloads/
+ 1449  ls sources/
+ 1450  ls sources/ -ah
+ 1451  ls sources/ -lah
+ 1452  ll
+ 1453  ls laird-som-external/
+ 1454  ls laird-som-external/board/
+ 1455  ls laird-som-external/board/ -LAH
+ 1456  ls
+ 1457  ll
+ 1458  ls
+ 1459  ll
+ 1460  mkdir -pv   br2-external-demo/{configs,board,package/{package-1,package-2}}
+ 1461  touch {Config.in,external.desc,external.mk,Makefile}
+ 1462  ll
+ 1463  mv Config.in external.* Makefile br2-external-demo/
+ 1464  cd br2-external-demo/
+ 1465  cd ..
+ 1466  mkdir -pv   br2-external-demo/{configs,board/{ootfs-overlay,kernel-dts,uboot-dts},package/{}}
+ 1467  ll
+ 1468  cd  br2-external-demo/
+ 1469  vi external.desc 
+ 1470  vi Config.in 
+ 1471  vi external.mk 
+ 1472  vi Makefile 
+ 1473  ll
+ 1474  cd configs/
+ 1475  touch {buildroot,uboot,kernel}.config
+ 1476  ls
+ 1477  ..
+ 1478  ls
+ 1479  vi external.desc 
+ 1480  ls
+ 1481  cd board/
+ 1482  mkdir demo
+ 1483  mv kernel-dts/ demo/
+ 1484  mv uboot-dts/ demo/
+ 1485  mv ootfs-overlay/ demo/
+ 1486  cd demo/
+ 1487  mv ootfs-overlay/ rootfs-overlay/
+ 1488  ll
+ 1489  cd ..
+ 1490  ll
+ 1491  cd package/
+ 1492  cd package-1/
+ 1493  ll
+ 1494  ..
+ 1495  mkdir package-1-test
+ 1496  mkdir package-2-test
+ 1497  ..
+ 1498  ll
+ 1499  ls package/
+ 1500  ls package/package-1
+ 1501  cd package/package-1
+ 1502  touch Config.in
+ 1503  vi Config.in 
+ 1504  vim Config.in 
+ 1505  kedit Config.in 
+ 1506  vi Config.in 
+ 1507  sudo apt-get install vim
+ 1508  vi Config.in 
+ 1509  ll
+ 1510  vi package-1.mk
+ 1511  ..
+ 1512  vi README.md
+ 1513  vi external.desc 
+ 1514  vi external.mk 
+ 1515  ls
+ 1516  ll
+ 1517  ls board/
+ 1518  ls board/demo/
+ 1519  ls board/demo/kernel-dts/
+ 1520  cd ..
+ 1521  ls
+ 1522  cd sources/
+ 1523  wget https://github.com/u-boot/u-boot/archive/refs/tags/v2023.07-rc4.tar.gz
+ 1524  wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.3.9.tar.xz
+ 1525  ll
+ 1526  extract linux-6.3.9.tar.xz 
+ 1527  tar -xvJf linux-6.3.9.tar.xz linux-6.3.9/
+ 1528  ll
+ 1529  extract v2023.07-rc4.tar.gz 
+ 1530  ll
+ 1531  ls -lah u-boot-2023.07-rc4/arch/arm/dts/
+ 1532  ls -lahRt u-boot-2023.07-rc4/arch/arm/dts/
+ 1533  ls -lahRt u-boot-2023.07-rc4/arch/arm/dts/*u-*
+ 1534  ls -lahRt u-boot-2023.07-rc4/arch/arm/dts/*u-*.dts
+ 1535  vi u-boot-2023.07-rc4/arch/arm/dts/rk3399-gru-kevin.dts
+ 1536  vi u-boot-2023.07-rc4/arch/arm/dts/socfpga_cyclone5_socdkll
+ 1537  ll
+ 1538  ..
+ 1539  cd br2-external-demo/
+ 1540  cd ..
+ 1541  ls
+ 1542  cd sources/
+ 1543  wget https://github.com/altera-opensource/u-boot-socfpga/archive/refs/tags/rel_socfpga_v2022.10_23.06.02_pr.tar.gz
+ 1544  wget https://github.com/altera-opensource/linux-socfpga/archive/refs/tags/rel_socfpga-6.1.20-lts_23.05.01_pr.tar.gz
+ 1545  ll
+ 1546  extract rel_socfpga_v2022.10_23.06.02_pr.tar.gz 
+ 1547  extract rel_socfpga-6.1.20-lts_23.05.01_pr.tar.gz 
+ 1548  ll
+ 1549  ..
+ 1550  mkdir br2-ems-dhs
+ 1551  ll
+ 1552  touchls br2-ems-dhs/
+ 1553  ls br2-ems-dhs/
+ 1554  ll
+ 1555  cd br2-e
+ 1556  cd br2-ems-dhs/
+ 1557  ll
+ 1558  cd ..
+ 1559  rm -Rvf br2-external-demo/
+ 1560  ll
+ 1561  ls
+ 1562  mv br2-ems-dhs/ dhs-br2/
+ 1563  cd dhs-br2/
+ 1564  cd ..
+ 1565  cd buildroot
+ 1566  cd ..
+ 1567  pwd
+ 1568  export RPI_BLD_DIR=/home/hroland/developpements/embedded/rpi3_64
+ 1569  ls buildroot/configs/
+ 1570  ls buildroot/configs/raspberrypi3_*
+ 1571  ls buildroot/configs/raspberrypi3_* -lah
+ 1572  ll
+ 1573  make -C buildroot O=${RPI_BLD_DIR} raspberrypi3_64_defconfig
+ 1574  make -C buildroot O=${RPI_BLD_DIR} menuconfig
+ 1575  make -C buildroot O=${RPI_BLD_DIR} linux-menuconfig
+ 1576  make -C buildroot O=${RPI_BLD_DIR} uboot-menuconfig
+ 1577  ll
+ 1578  vi Makefile
+ 1579  htop
+ 1580  !
+ 1581  sudo apt-get  install btop
+ 1582  btop
+ 1583  ll
+ 1584  ls
+ 1585  clear
+ 1586  ll
+ 1587  vi Makefile 
+ 1588  ll
+ 1589  ls output/
+ 1590  tm -Rvf  output/
+ 1591  rm -Rvf  output/
+ 1592  rm -Rvf rpi3_64/
+ 1593  ls dhs-br2/
+ 1594  ll
+ 1595  ls dhs-br2/
+ 1596  cd dhs-br2/
+ 1597  vi external.desc
+ 1598  touch Config.in
+ 1599  touch external.mk
+ 1600  l
+ 1601  ll
+ 1602  mkdir -pv package/{leonardo,michelangelo,donatello,shredder,krang,splinter,karai,slash,utrom,raphael,hun}
+ 1603  touch package/{leonardo,michelangelo,donatello,shredder,krang,splinter,karai,slash,utrom,raphael,hun}/{Config.in,name.hash,name.mk}
+ 1604  tree
+ 1605  sudo apt-get install tree
+ 1606  tree
+ 1607  ll
+ 1608  ..
+ 1609  vi Makefile 
+ 1610  ll
+ 1611  ls buildroot/utils/
+ 1612  ls buildroot/utils/brmake 
+ 1613  vi Makefile 
+ 1614  ls
+ 1615  mkdir dhs-br2/configsl
+ 1616  ls
+ 1617  cd dhs-br2/
+ 1618  cd package/
+ 1619  mkdir criterion
+ 1620  cd criterion
+ 1621  touch criterion.mk
+ 1622  touch criterion.hash
+ 1623  touch Config.in
+ 1624  ll
+ 1625  vi criterion.mk 
+ 1626  vi Config.in 
+ 1627  vi criterion.mk 
+ 1628  ..
+ 1629  vi Makefile 
+ 1630  make
+ 1631  ls
+ 1632  ll
+ 1633  ls buildroot
+ 1634  rm -Rvf buildroot
+ 1635  make
+ 1636  ll
+ 1637  make
+ 1638  ll
+ 1639  cd dhs-br2/
+ 1640  cd package/
+ 1641  ll
+ 1642  mkdir esp8089
+ 1643  cd esp8089/
+ 1644  vi esp8089.mk
+ 1645  vi Config.in
+ 1646  ..
+ 1647  vi Config.in 
+ 1648  vi external.
+ 1649  vi external.desc 
+ 1650  vi Config.in 
+ 1651  vi external.mk 
+ 1652  ll
+ 1653  ls configs/
+ 1654  ll
+ 1655  cd configs/
+ 1656  wget https://github.com/buildroot/buildroot/blob/master/configs/raspberrypi3_64_defconfig
+ 1657  wget https://github.com/buildroot/buildroot/blob/master/configs/socrates_cyclone5_defconfig
+ 1658  wget https://github.com/buildroot/buildroot/blob/master/configs/qemu_x86_64_defconfig
+ 1659  wget https://github.com/buildroot/buildroot/blob/master/configs/qemu_aarch64_virt_defconfig
+ 1660  ll
+ 1661  gcc -v
+ 1662  gdb --version
+ 1663  ls /opt/
+ 1664  lear
+ 1665  clear
+ 1666  cls
+ 1667  cd developpements/
+ 1668  cd embedded/
+ 1669  ls
+ 1670  ls /home/hroland/Documents/
+ 1671  ls /home/hroland/Downloads/
+ 1672  mv /home/hroland/Downloads/*zip sources/
+ 1673  ll
+ 1674  clear
+ 1675  ll
+ 1676  ls dhs-br2/
+ 1677  cd dhs-br2/
+ 1678  ls configs/
+ 1679  clear
+ 1680  ls
+ 1681  mkdir board/{rootfs-overlay,kernel-dts,uboot-dts}
+ 1682  ls
+ 1683  cd board/
+ 1684  mkdir dhs
+ 1685  mv kernel-dts/ rootfs-overlay/ uboot-dts/ dhs/
+ 1686  ll
+ 1687  llls
+ 1688  ll
+ 1689  cd dhs/
+ 1690  mkdir configs
+ 1691  ls configs/
+ 1692  ..
+ 1693  mkdir rpi3
+ 1694  mkdir qemu
+ 1695  mkdir qemu_risc
+ 1696  ll
+ 1697  ..
+ 1698  ll
+ 1699  ls configs/
+ 1700  ls
+ 1701  ll
+ 1702  mv qemu_* configs/
+ 1703  ls
+ 1704  cd configs/
+ 1705  ll
+ 1706  ..
+ 1707  mv kernel-modules/ package/
+ 1708  ll
+ 1709  mv userspace_program/ package/
+ 1710  mv kernel_module/ kmod/
+ 1711  mv kmod/ package/
+ 1712  cd package/
+ 1713  cd kmod/
+ 1714  vi Config.in 
+ 1715  mv kernel_module.c kmod.c
+ 1716  mv kernel_module.mk kmod.mk
+ 1717  vi kmod.mk 
+ 1718  ls
+ 1719  vi kmod.c 
+ 1720  ll
+ 1721  ..
+ 1722  mv userspace_program/ application/
+ 1723  mv application/ll
+ 1724  ll
+ 1725  cd kernel-modules/
+ 1726  vi Config.in 
+ 1727  vi kernel-modules.mk 
+ 1728  vi Config.in 
+ 1729  ls kmod-example/
+ 1730  cd kmod-example/
+ 1731  vi Config.in 
+ 1732  vi kmod-example.c 
+ 1733  vi kmod-example.mk 
+ 1734  ll
+ 1735  vi Makefile 
+ 1736  ..
+ 1737  ll
+ 1738  mkdir board/qemu-aarch64
+ 1739  cd package/
+ 1740  ll
+ 1741  cd ..
+ 1742  rm -Rvf buildroot-2023.05.tar.gz
+ 1743  rm -Rvf buildroot-2023.05.tar.gz.sign 
+ 1744  ll
+ 1745  mkdir dhs
+ 1746  mv Makefile dhs-br2/ dhs
+ 1747  ll
+ 1748  cd dhs/
+ 1749  ll
+ 1750  cd ..
+ 1751  ls laird-som-external/
+ 1752  make
+ 1753  clear
+ 1754  make download 
+ 1755  clear
+ 1756  ll
+ 1757  rm -Rvf buildroot-2023.05*
+ 1758  ll
+ 1759  rm -Rvf download/
+ 1760  ls
+ 1761  ls dhs-br2/
+ 1762  ls dhs-br2/configs/
+ 1763  ll
+ 1764  cd dhs-br2/
+ 1765  cd package/
+ 1766  mkdir dhs
+ 1767  touch dhs/dhs.mk
+ 1768  ll
+ 1769  ..
+ 1770  cd sources/
+ 1771  extract RaspberryMatic-master.zip 
+ 1772  ll
+ 1773  ..
+ 1774  cd dhs/
+ 1775  cd dhs-br2/
+ 1776  ls
+ 1777  cd ll
+ 1778  ll
+ 1779  mkdir br2-patches
+ 1780  ls
+ 1781  cd br2-patches/
+ 1782  ll
+ 1783  ..
+ 1784  ..cd board/
+ 1785  cd board/
+ 1786  cd dhs/
+ 1787  cd kernel-dts/
+ 1788  cp -v /home/hroland/developpements/embedded/sources/linux-socfpga-rel_socfpga-6.1.20-lts_23.05.01_pr/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts .
+ 1789  ll
+ 1790  mv socfpga_cyclone5_socdk.dts   dhs.dts
+ 1791  ..
+ 1792  cd uboot-dts/
+ 1793  cp -v /home/hroland/developpements/embedded/sources/u-boot-socfpga-rel_socfpga_v2022.10_23.06.02_pr/arch/arm/dts/socfpga_cyclone5_socdk* .
+ 1794  ll
+ 1795  mv socfpga_cyclone5_socdk.dts dhs.dts
+ 1796  mv socfpga_cyclone5_socdk-u-boot.dtsi dhs-u-boot.dtsi 
+ 1797  clear
+ 1798  ..
+ 1799  cd dhs/
+ 1800  clear
+ 1801  make
+ 1802  clear
+ 1803  make download 
+ 1804  make build
+ 1805  ls
+ 1806  ll
+ 1807  cd dhs-br2/
+ 1808  ls package/
+ 1809  ll
+ 1810  cp -Rv package/ ../packages-backup
+ 1811  ll
+ 1812  cd package/
+ 1813  ls
+ 1814  ls ../
+ 1815  ls ../../
+ 1816  ll
+ 1817  cd ..
+ 1818  rm -Rvf package/
+ 1819  ll
+ 1820  mkdir package/
+ 1821  ll
+ 1822  cp -Rv ../packages-backup/esp8089/ package/
+ 1823  ..
+ 1824  make build
+ 1825  ls
+ 1826  make clean
+ 1827  ls
+ 1828  ll
+ 1829  cd dhs-br2/
+ 1830  cd configs/
+ 1831  ls ../../packages-backup/
+ 1832  mv *BR2_EXTERNAL_EQ3_PATH
+ 1833  mv *defconfig ../../packages-backup/
+ 1834  ll
+ 1835  cp -v../../packages-backup/raspberrypi3_64_defconfig .
+ 1836  cp -v ../../packages-backup/raspberrypi3_64_defconfig .
+ 1837  ll
+ 1838  vi raspberrypi3_64_defconfig 
+ 1839  history | grep wget
+ 1840  ls -lah packages-backup
+ 1841  ..
+ 1842  cd packages-backup/
+ 1843  ll
+ 1844  ..
+ 1845  ll
+ 1846  ..
+ 1847  ls laird-som-external/
+ 1848  ls laird-som-external/ll
+ 1849  ll
+ 1850  rm -Rvf laird-som-external/
+ 1851  clear
+ 1852  make clean
+ 1853  ll
+ 1854  cd dhs/
+ 1855  make clean
+ 1856  make 
+ 1857  make build
+ 1858  make menuconfig 
+ 1859  make build
+ 1860  make help
+ 1861  make clean all
+ 1862  make clean-all
+ 1863  make build
+ 1864  ll
+ 1865  ls build-rpi0w-uav/
+ 1866  ls build-rpi0w-uav/images/
+ 1867  ls -lah build-rpi0w-uav/images/
+ 1868  ls
+ 1869  cp -v buildroot-2023.05/board/altera/socrates_cyclone5/*.* dhs-br2/board/dhs/
+ 1870  lsll
+ 1871  ll
+ 1872  make build
+ 1873  make check
+ 1874  make build
+ 1875  make linux-menuconfig
+ 1876  make busybox-menuconfig
+ 1877  make build
+ 1878  make menuconfig
+ 1879  make TARGET_BOARD=dhs menuconfig
+ 1880  make TARGET_BOARD=dhs linux-menuconfig
+ 1881  make TARGET_BOARD=dhs uboot-menuconfig
+ 1882  make TARGET_BOARD=dhs menuconfig
+ 1883  make TARGET_BOARD=dhs uboot-menuconfig
+ 1884  make TARGET_BOARD=dhs menuconfig
+ 1885  make TARGET_BOARD=dhs uboot-menuconfig
+ 1886  make TARGET_BOARD=dhs menuconfig
+ 1887  make TARGET_BOARD=dhs savedefconfig
+ 1888  make TARGET_BOARD=dhs menuconfig
+ 1889  make TARGET_BOARD=dhs savedefconfig
+ 1890  make TARGET_BOARD=dhs menuconfig
+ 1891  make TARGET_BOARD=dhs linux-update-defconfig
+ 1892  make TARGET_BOARD=dhs busybox-update-defconfig
+ 1893  make TARGET_BOARD=dhs busybox-update-config
+ 1894  make TARGET_BOARD=dhs uboot-update-defconfig
+ 1895  make TARGET_BOARD=dhs uboot-menuconfig
+ 1896  make TARGET_BOARD=dhs build
+ 1897  make TARGET_BOARD=dhs menuconfig
+ 1898  make TARGET_BOARD=dhs build
+ 1899  make TARGET_BOARD=dhs menuconfig
+ 1900  make TARGET_BOARD=dhs build
+ 1901  make TARGET_BOARD=dhs uboot-menuconfig
+ 1902  make TARGET_BOARD=dhs build
+ 1903  make TARGET_BOARD=dhs uboot-menuconfig
+ 1904  make TARGET_BOARD=dhs build
+ 1905  grep inRsH "add_mtd_device" build-dhs/build/uboot-custom/
+ 1906  grep -inRsH "add_mtd_device" build-dhs/build/uboot-custom/
+ 1907  make TARGET_BOARD=dhs uboot-menuconfig
+ 1908  make TARGET_BOARD=dhs build
+ 1909  clear
+ 1910  ls
+ 1911  cd ..
+ 1912  ..
+ 1913  clear
+ 1914  ls
+ 1915  ll
+ 1916  vi raspberrypi3_64_defconfig 
+ 1917  clear
+ 1918  ll
+ 1919  cd cfsos/
+ 1920  mkdir br2-cfsos
+ 1921  ls
+ 1922  cpll
+ 1923  ll
+ 1924  cp -Rv /home/hroland/developpements/embedded/dhs/dhs-br2/board br2-cfsos/
+ 1925  ll
+ 1926  ls br2-cfsos/
+ 1927  cp -Rv /home/hroland/developpements/embedded/dhs/dhs-br2/configs/ br2-cfsos/
+ 1928  cp -Rv /home/hroland/developpements/embedded/dhs/dhs-br2/package/ br2-cfsos/
+ 1929  ll
+ 1930  ls br2-cfsos/
+ 1931  ls br2-cfsos/configs/
+ 1932  rm br2-cfsos/configs/dhs_defconfig 
+ 1933  ll
+ 1934  vi Makefile 
+ 1935  ls
+ 1936  cd br2-cfsos/
+ 1937  ll
+ 1938  vi external.desc 
+ 1939  vi external.mk 
+ 1940  vi Config.in 
+ 1941  #ls configs/
+ 1942  ls configs/
+ 1943  ls package/
+ 1944  ll
+ 1945  ..
+ 1946  ls build/
+ 1947  git status
+ 1948  ll
+ 1949  vi .gitignore 
+ 1950  git status
+ 1951  ls
+ 1952  cp -Rv /home/hroland/developpements/embedded/dhs/dhs-br2/board/dhs/ br2-cfsos/
+ 1953  ll
+ 1954  cd br2-cfsos/
+ 1955  mv dhs/ board/
+ 1956  ls
+ 1957  ls board/
+ 1958  ls board/dhs/
+ 1959  ll
+ 1960  rm -Rvf dhs/
+ 1961  ll
+ 1962  cd board/
+ 1963  mv dhs/ arkhe-cfs
+ 1964  ll
+ 1965  git status
+ 1966  ..
+ 1967  ls
+ 1968  ls br2-cfsos/
+ 1969  ls br2-cfsos/board/
+ 1970  ls br2-cfsos/board/arkhe-cfs/
+ 1971  ll
+ 1972  git mv cfsboard.user.cfg br2-cfsos/board/arkhe-cfs/
+ 1973  ll
+ 1974  git status
+ 1975  vi .gitignore 
+ 1976  git status
+ 1977  vi .gitignore 
+ 1978  git status
+ 1979  ls br2-cfsos/board/qemu-aarch64/
+ 1980  ll
+ 1981  git rm .config 
+ 1982  git rm -r build/
+ 1983  ll
+ 1984  clear
+ 1985  git ststus
+ 1986  git status
+ 1987  clear
+ 1988  make
+ 1989  make build
+ 1990  ll
+ 1991  cd br2-cfsos/
+ 1992  cp -Rv /home/hroland/developpements/embedded/dhs/packages-backup/kmod/ package/
+ 1993  make build
+ 1994  ..
+ 1995  make build
+ 1996  ls
+ 1997  cd br2-cfsos/
+ 1998  cp -Rv /home/hroland/developpements/embedded/dhs/packages-backup/application/ package/
+ 1999  rm -Rvf package/kmod/
+ 2000  ..
+ 2001  make build
+ 2002  vi /board/raspberrypi0w-uav/config_0w-uav.txt
+ 2003  vi board/raspberrypi0w-uav/config_0w-uav.txt
+ 2004  ls
+ 2005  cd br2-cfsos/
+ 2006  vi board/raspberrypi0w-uav/config_0w-uav.txt
+ 2007  ..
+ 2008  make build
+ 2009  make TARGET_BOARD=rpi0w-uav rpi0w-uav-rebuildbuild
+ 2010  make TARGET_BOARD=rpi0w-uav rpi0w-uav-rebuild
+ 2011  make TARGET_BOARD=rpi0w-uav build
+ 2012  make TARGET_BOARD=rpi0w-uav menuconfig
+ 2013  make TARGET_BOARD=rpi0w-uav savedefconfig 
+ 2014  make TARGET_BOARD=rpi0w-uav build
+ 2015  make TARGET_BOARD=rpi0w-uav savedefconfig 
+ 2016  vi ./br2-cfsos/configs/rpi0w-uav_defconfig
+ 2017  make TARGET_BOARD=rpi0w-uav menuconfig
+ 2018  make TARGET_BOARD=rpi0w-uav savedefconfig 
+ 2019  make TARGET_BOARD=rpi0w-uav menuconfig
+ 2020  make TARGET_BOARD=rpi0w-uav build
+ 2021  make TARGET_BOARD=rpi0w-uav menuconfig
+ 2022  make TARGET_BOARD=rpi0w-uav build
+ 2023  make TARGET_BOARD=rpi0w-uav menuconfig
+ 2024  make TARGET_BOARD=rpi0w-uav linux-menuconfig
+ 2025  history 
+ 2026  history  > cli.txt
