@@ -1,16 +1,18 @@
 
-# menu " Services"
+menu " Services"
 #   source "$BR2_EXTERNAL_CFSOS_PATH/package/occu/Config.in"
-# endmenu
+endmenu
 
 menu "Kernel Module Support"
     source "$BR2_EXTERNAL_CFSOS_PATH/package/esp8089/Config.in"
+    source "$BR2_EXTERNAL_CFSOS_PATH/package/kernel_module/Config.in"
+    source "$BR2_EXTERNAL_CFSOS_PATH/package/kernel-modules/Config.in"
 #   source "$BR2_EXTERNAL_CFSOS_PATH/package/generic_raw_uart/Config.in"
 #   source "$BR2_EXTERNAL_CFSOS_PATH/package/bcm2835_raw_uart/Config.in"
 #   source "$BR2_EXTERNAL_CFSOS_PATH/package/eq3_char_loop/Config.in"
 endmenu
 
-# menu "Hardware Support"
+menu "Hardware Support"
 #   source "$BR2_EXTERNAL_CFSOS_PATH/package/rpi-rf-mod/Config.in"
 #   source "$BR2_EXTERNAL_CFSOS_PATH/package/susvd/Config.in"
 #   source "$BR2_EXTERNAL_CFSOS_PATH/package/piusvd/Config.in"
@@ -21,7 +23,7 @@ endmenu
 #   source "$BR2_EXTERNAL_CFSOS_PATH/package/bluetooth-tinker/Config.in"
 #   source "$BR2_EXTERNAL_CFSOS_PATH/package/rpi-eeprom/Config.in"
 #   source "$BR2_EXTERNAL_CFSOS_PATH/package/hardkernel-boot/Config.in"
-# endmenu
+endmenu
 
 menu "Software Support"
     source "$BR2_EXTERNAL_CFSOS_PATH/package/application/Config.in"
