@@ -467,7 +467,7 @@
  1829  cd dhs-br2/
  1830  cd configs/
  1831  ls ../../packages-backup/
- 1832  mv *BR2_EXTERNAL_EQ3_PATH
+ 1832  mv *BR2_EXTERNAL_CFSOS_PATH
  1833  mv *defconfig ../../packages-backup/
  1834  ll
  1835  cp -v../../packages-backup/raspberrypi3_64_defconfig .
