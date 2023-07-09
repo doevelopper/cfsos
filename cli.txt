@@ -4,12 +4,7 @@
  1366  cd embedded/
  1367  wget https://github.com/buildroot/buildroot/archive/refs/tags/2023.05.tar.gz
  1368  tar -xvzf 2023.05.tar.gz buildroot-2023.05/
- 1369  LL
- 1370  ll
  1371  mv buildroot-2023.05/ buildroot
- 1372  ll
- 1373  ls
- 1374  ll
  1375  python --version
  1376  ll
  1377  mv -v /home/hroland/Downloads/buildroot-external-packages-master.zip .
