@@ -1,0 +1,417 @@
+#
+#       .github/workflows/ContinuousTesting-Linux.yml
+#
+#       Copyright (C) 2014 - 2021  The CFS SW Platform Development Team.
+#                        All rights reserved.
+#
+#
+#    Permission is hereby granted, free of charge, to any person obtaining
+#    a copy of this software and associated documentation files (the
+#    "Software"), to deal in the Software without restriction, including
+#    without limitation the rights to use, copy, modify, merge, publish,
+#    distribute, sublicense, and/or sell copies of the Software, and to
+#    permit persons to whom the Software is furnished to do so, subject to
+#    the following conditions:
+#
+#    The above copyright notice and this permission notice shall be
+#    included in all copies or substantial portions of the Software.
+#
+#    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+#    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+#    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+#    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+#    LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+#    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+#    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#
+#
+
+# GitHub Actions workflow file
+# https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions
+
+name: 🐧🐧 Continuous Integration
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }} # group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [ main, master, develop, feature/**, bugfix/**, hotfix/**, support/** ]
+    paths-ignore:
+      - '**.md'
+    # - '.github/workflows/**'
+    # tags: [ 'v*.*.*' ] # Workflow run on tags for vx.x.x only.
+    # tags:
+    #   - "v*.*.*" # on every version tag will build a new android artifact.
+    # branches-ignore: [ poc/**]
+    tags-ignore:
+      - 'v*.*.*'
+  pull_request:
+    branches: [ main, master, develop, feature/**, bugfix/**, hotfix/**, support/** ]
+    paths-ignore:
+      - '**.md'
+  # pull_request_target:
+  #   types: [ opened, synchronize, reopened, ready_for_review, edited ]
+    tags-ignore:
+      - 'v*.*.*'
+  schedule:
+    - cron: '31 0 * * 1'
+    # - cron: '0 0 * * *' # Nightly build
+
+env:
+  REPO_NAME: ${{ github.repository }}
+  EVENT_NAME: ${{ github.event_name }}
+  BZL_CACHE: ${{ github.workspace }}/.cache/bazel
+  BZL_OUTPUT: ${{ github.workspace }}/bazel/output
+  BUILD_DIR: '${{ github.workspace }}/build'
+  CCACHE_BASEDIR: ${{github.workspace}}
+  CCACHE_DIR: '${{ github.workspace }}/ccache'
+  CCACHE_COMPRESS: true
+  CCACHE_COMPRESSLEVEL: 6
+  CCACHE_MAXSIZE: 5G
+  # Indicates the CMake build directory where project files and binaries are being produced.
+  CMAKE_BUILD_DIR: ${{ github.workspace }}/builddir/
+  LOG4CXX_CONFIGURATION: ${{ github.workspace }}/src/main/resources/configs/log4cxx.xml
+  RUN_ID: ${{ github.run_id }}-${{ github.run_number }}
+  # BUILD_TYPE: RelWithDebInfo
+  QTEST_FUNCTION_TIMEOUT: 60000
+  QT_VERSION: 6.2.3
+  CLANG_VERSION: 130
+  ELFUTILS_VERSION: 0.175
+  CMAKE_VERSION: 3.21.1
+  NINJA_VERSION: 1.10.2
+  BUILD_TYPE: Release
+  CCACHE_VERSION: 4.5
+  QT_MIRRORS: download.qt.io;mirrors.ocf.berkeley.edu/qt;ftp.fau.de/qtproject;mirror.bit.edu.cn/qtproject
+
+jobs:
+  check-style:
+    timeout-minutes: 10
+    name: ${{ github.repository }} Coding style checking
+    strategy:
+      matrix:
+        python-version: [3.9]
+    runs-on: ubuntu-latest
+    # if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
+
+    # runs-on: >-
+    #     ${{ (
+    #     (
+    #       github.event_name == 'push' ||
+    #       github.event_name == 'schedule' ||
+    #       contains(fromJSON('[
+    #         "doevelopper",
+    #         "ahl",
+    #       ]'), github.event.pull_request.user.login)
+    #     ) && github.repository == 'doevelopper/rules-sdlc'
+    #     ) && 'self-hosted' || 'ubuntu-20.04' }}
+    steps:
+      -
+        name: "Checkout ${{ github.ref }} ( ${{ github.sha }} )"
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          submodules: 'recursive'
+          fetch-depth: '0'
+      -
+        name: Bazel output cache
+        id: cache-bazel
+        uses: actions/cache@v2
+        with:
+          path: "${{ github.workspace }}/.bazel-cache"
+          key: ${{ runner.os }}-bazel-cache-${{ github.run_id}}-${{ hashFiles('WORKSPACE') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+            ${{ runner.os }}-bazel-out-
+      -
+        name: Install Python
+        uses: actions/setup-python@v3.1.2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      -
+        name: pip cache
+        uses: actions/cache@v3
+        # if: runner.os == 'Linux'
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-${{ matrix.python-version }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.python-version }}-pip-
+      -
+        name: Validate the project is correct and all necessary information is available.
+        run: |
+          ls -lart ${{ github.workspace }}
+      -
+        name: Initialize build state, e.g. set properties or create directories.
+        run: |
+          ls -lart ${{ github.workspace }}
+      -
+        name: Generate any source code for inclusion in compilation.
+        run: |
+          ls -lart ${{ github.workspace }}
+      -
+        name: Process the source code, for example to filter any values.
+        run: |
+          ls -laFS ${{ github.workspace }}
+      -
+        name: Generate resources for inclusion in the package.
+        run: |
+          ls -laFS ${{ github.workspace }}
+      -
+        name: Copy and process the resources into the destination directory, ready for packaging.
+        run: |
+          ls -laFS ${{ github.workspace }}
+      -
+        name: Configure bazel config for actions
+        run: |
+          echo "build --config github_actions" > user.bazelrc
+          echo "build --disk_cache ${{ github.workspace }}/.bazel-cache/disk-cache" >> user.bazelrc
+          echo "build --repository_cache ${{ github.workspace }}/.bazel-cache/repo-cache" >> user.bazelrc
+
+      # -
+      #   name: Discord notification
+      #   uses: rjstone/discord-webhook-notify@v1
+      #   if: failure() && ( github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false)
+      #   with:
+      #     severity: error
+      #     details: Freqtrade CI failed on ${{ matrix.os }}
+      #     webhookUrl: ${{ secrets.DISCORD_WEBHOOK }
+
+  # clang-format:
+  #   name: ${{ github.repository }} clang format
+  #   runs-on: ubuntu-latest
+  #   needs: check-style
+  #   steps:
+  #     -
+  #       name: Checkout Sources
+  #       uses: actions/checkout@v1
+  #     -
+  #       name: Execute linting with clang-format
+  #       uses: DoozyX/clang-format-lint-action@v0.12
+  #       with:
+  #         source: '.'
+  #         exclude: './src/main/resources ./src/test/resources'
+  #         extensions: 'hpp,cpp'
+  #         clangFormatVersion: 11
+  #         inplace: True
+  #         style: chromium
+  #     # -
+  #     #   name: 'Archive ${{ github.repository }} Logs'
+  #     #   uses: actions/upload-artifact@v2
+  #     #   if: always()
+  #     #   with:
+  #     #     name: ci-${{ github.repository }}-${{github.job}} logs
+  #     #     path: ${{ github.repository }}-ci-logs.tar.gz
+  #     #     retention-days: 5
+
+  # clazy-format:
+  #   name: ${{ github.repository }} clazy
+  #   runs-on: ubuntu-latest
+  #   needs: check-style
+  #   steps:
+  #     -
+  #       name: Checkout Sources
+  #       uses: actions/checkout@v1
+  #     -
+  #       name: Install CppCheck
+  #       uses: actions/checkout@v2
+  #       run: |
+  #         ls -laFS ${{ github.workspace }}
+
+  unit-test:
+    name: ${{ github.repository }} Unit tests
+    needs: check-style
+    runs-on: ubuntu-latest
+    # if: github.event.workflow_run.conclusion != 'skipped'
+    timeout-minutes: 20
+    # strategy:
+    #   fail-fast: false
+    #   max-parallel: 1
+    #   matrix:
+    #     env:
+    #       - { COMPILER: "gcc",   COMPILER_VERSION: "10", SANITIZE: "yes"  }
+    #       - { COMPILER: "gcc",   COMPILER_VERSION: "10", SANITIZE: "no"   }
+    #       - { COMPILER: "clang", COMPILER_VERSION: "12", SANITIZE: "yes"  }
+    #       - { COMPILER: "clang", COMPILER_VERSION: "12", SANITIZE: "no"   }
+    # env: ${{ matrix.env }}
+
+    steps:
+      -
+        name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
+        if: ${{ github.event_name != 'pull_request_target' }}
+        uses: actions/checkout@v2.3.4
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          submodules: 'recursive'
+          fetch-depth: 0
+      #     ref: ${{ github.event.pull_request.head.sha }}
+      -
+        name: Bazel output cache
+        id: cache-bazel
+        uses: actions/cache@v2
+        with:
+          path: "${{ github.workspace }}/.bazel-cache"
+          # key: ${{ runner.os }}-bazel-cache-${{ github.run_id}}-${{ hashFiles('WORKSPACE') }}
+          key: ${{ runner.os }}-bazel-cache-${{ hashFiles('WORKSPACE') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+            ${{ runner.os }}-bazel-out-
+
+      -
+        name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+
+      -
+        name: Configure bazel config for actions
+          # echo "build --config github_actions" > user.bazelrc
+        run: |
+          echo "build --disk_cache ${{ github.workspace }}/.bazel-cache/disk-cache" >> user.bazelrc
+          echo "build --repository_cache ${{ github.workspace }}/.bazel-cache/repo-cache" >> user.bazelrc
+
+      -
+        name: Install Bazel build tool.
+        run: |
+          ls -laFS ${{ github.workspace }}
+          wget -O bazelisk "https://github.com/bazelbuild/bazelisk/releases/download/v1.11.0/bazelisk-linux-amd64"
+          test "231ec5ca8115e94c75a1f4fbada1a062b48822ca04f21f26e4cb1cd8973cd458  bazelisk" = "$(sha256sum bazelisk)"
+          chmod +x bazelisk
+          mv bazelisk /usr/local/bin/bazelisk
+
+      -
+        name: Compile the source code of the project.
+        env:
+          # Bazelisk will download bazel to here
+          # make build-deps
+          XDG_CACHE_HOME: ~/.cache/bazel
+        run: |
+          ls -laFS ${{ github.workspace }}
+          bazelisk build --cxxopt=-std=c++17 --host_cxxopt=-std=c++17 --client_env=BAZEL_CXXOPTS=-std=c++17 @org_apache_apr//:apr --client_env=CC=gcc --client_env=CXX=g++
+      -
+        name: Post-process the generated files from compilation,
+        run: |
+          ls -laFS ${{ github.workspace }}
+
+      -
+        name: Generate any test source code for inclusion in compilation.
+        run: |
+          ls -laFS ${{ github.workspace }}
+      -
+        name: Process the test source code, for example to filter any values.
+        run: |
+          ls -laFS ${{ github.workspace }}
+      -
+        name: Create resources for testing.
+        run: |
+          ls -laFS ${{ github.workspace }}
+      -
+        name: Copy and process the resources into the test destination directory.
+        run: |
+          ls -laFS ${{ github.workspace }}
+      -
+        name: Compile the test source code into the test destination directory
+        run: |
+          ls -laFS ${{ github.workspace }}
+      -
+        name: Post-process the generated files from test compilation,
+        run: |
+          ls -laFS ${{ github.workspace }}
+      -
+        name: Run tests using a suitable unit testing framework. These tests should not require the code be packaged or deployed.
+        run: |
+          ls -laFS ${{ github.workspace }}
+        # make test
+      -
+        name: 'Archive ${{ github.repository }} Logs'
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: ci-${{ github.repository }}-${{github.job}} logs
+          path: ${{ github.repository }}-ci-logs.tar.gz
+          retention-days: 5
+
+  start-u-service:
+    name: Start self-hosted EC2 runner
+    if: >
+      github.event_name == 'schedule' && github.repository == 'doevelopper/rules-sdlc' ||
+      github.event_name == 'push' && github.repository == 'doevelopper/rules-sdlc' ||
+      github.event_name == 'pull_request' && github.event.pull_request.base.repo.full_name == 'doevelopper/rules-sdlc' && !github.event.pull_request.head.repo.fork
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Start service.
+        run: |
+          ls -laFS ${{ github.workspace }}
+
+  integration-test:
+    name: ${{ github.repository }} Integration Test
+    if: needs.start-u-service.result != 'skipped'
+    needs: [unit-test,start-u-service]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # if: github.event.workflow_run.conclusion != 'skipped'
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          fetch-depth: '0'
+      -
+        name: Perform any operations necessary to prepare a package before the actual packaging. This often results in an unpacked, processed version of the package.
+        run: |
+          ls -laFS ${{ github.workspace }}
+      -
+        name: Take the compiled code and package it in its distributable format, such as a tar.gz.
+        run: |
+          ls -laFS ${{ github.workspace }}
+      -
+        name: Perform actions required before integration tests are executed. This may involve things such as setting up the required environment.
+        run: |
+          ls -laFS ${{ github.workspace }}
+      -
+        name: Process and deploy the package if necessary into an environment where integration tests can be run.
+        run: |
+          ls -laFS ${{ github.workspace }}
+      -
+        name: Perform actions required after integration tests have been executed. This may including cleaning up the environment.
+        run: |
+          ls -laFS ${{ github.workspace }}
+      -
+        name: 'Archive ${{ github.repository }} Logs'
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: ci-${{ github.repository }}-${{github.job}} logs
+          path: ${{ github.repository }}-ci-logs.tar.gz
+          retention-days: 5
+      # -
+      #   name: Upload linux-amd64 binary
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: ${{github.repository_owner}}-linux-amd64
+      #     path: ${{ github.workspace }}/bazel-out/k8-fastbuild/bin/${{github.repository_owner}}-linux-amd64
+      -
+        name: Copy artifacts to NFS
+        if: success() && github.event_name == 'push' && github.repository == 'doevelopper/rules-sdlc'
+        continue-on-error: true
+        run: ls
+
+  stop-u-service:
+    name: Start self-hosted EC2 runner
+    # required to stop the runner even if the error happened in the previous job
+    if: always() && needs.start-u-service.result != 'skipped'
+    needs: [start-u-service, integration-test]
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Stop Service.
+        run: |
+          ls -laFS ${{ github.workspace }}

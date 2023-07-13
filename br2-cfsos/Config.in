@@ -1,21 +1,21 @@
-# menu "Linux extensions"
-#     menu "Kernel Module Support"
-#         source "$BR2_EXTERNAL_CFSOS_PATH/package/esp8089/Config.in"
+menu "Linux extensions"
+    menu "Kernel Module Support"
+        source "$BR2_EXTERNAL_CFSOS_PATH/package/esp8089/Config.in"
 #         source "$BR2_EXTERNAL_CFSOS_PATH/package/kernel_module/Config.in"
 #         source "$BR2_EXTERNAL_CFSOS_PATH/package/kernel-modules/Config.in"
 #     #   source "$BR2_EXTERNAL_CFSOS_PATH/package/generic_raw_uart/Config.in"
 #     #   source "$BR2_EXTERNAL_CFSOS_PATH/package/bcm2835_raw_uart/Config.in"
 #     #   source "$BR2_EXTERNAL_CFSOS_PATH/package/eq3_char_loop/Config.in"
-#     endmenu
-# endmenu
+    endmenu
+endmenu
 
-# menu "Target packages"
-#     menu "Software Support"
+menu "Target packages"
+    menu "Software Support"
 #         menu " Services"
 #         #   source "$BR2_EXTERNAL_CFSOS_PATH/package/occu/Config.in"
 #         endmenu
-#         menu " Application"
-#             source "$BR2_EXTERNAL_CFSOS_PATH/package/application/Config.in"
+        menu " Application"
+            source "$BR2_EXTERNAL_CFSOS_PATH/package/application/Config.in"
 #         #   source "$BR2_EXTERNAL_CFSOS_PATH/package/detect_radio_module/Config.in"
 #         #   source "$BR2_EXTERNAL_CFSOS_PATH/package/daemonize/Config.in"
 #         #   source "$BR2_EXTERNAL_CFSOS_PATH/package/ssdpd/Config.in"
@@ -28,8 +28,8 @@
 #         #   source "$BR2_EXTERNAL_CFSOS_PATH/package/raspi-fanshim/Config.in"
 #         #   source "$BR2_EXTERNAL_CFSOS_PATH/package/xe-guest-utilities/Config.in"
 #         #   source "$BR2_EXTERNAL_CFSOS_PATH/package/tailscale/Config.in"
-#         endmenu
-#     endmenu
+        endmenu
+    endmenu
 
 #     menu "Hardware Support"
 #     #   source "$BR2_EXTERNAL_CFSOS_PATH/package/rpi-rf-mod/Config.in"
@@ -54,7 +54,7 @@
 #     menu "CFSOS External packages"
 #         # source "$BR2_EXTERNAL_CFSOS_PATH/Config.ext.in"
 #     endmenu
-# endmenu
+endmenu
 
 # menu "Host packages"
 

@@ -1,0 +1,9 @@
+config BR2_PACKAGE_CRITERION
+	bool "criterion"
+	select BR2_PACKAGE_LIBFFI
+	select BR2_PACKAGE_LIBGLIB2
+	help
+	  Criterion is a cross-platform C and C++ unit testing
+	  framework.
+
+	  https://github.com/Snaipe/Criterion

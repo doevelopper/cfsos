@@ -1,0 +1,76 @@
+# See https://github.com/marketplace/actions/close-stale-issues
+
+name: Mark stale issues and pull requests
+
+on:
+  schedule:
+  # run at 22:00 UTC daily
+  - cron: "00 22 * * *"
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/stale@v3
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+        # NB: We start with very long duration while trimming existing issues,
+        # with the hope to reduce when/if we get better at keeping up with user support.
+
+        # The number of days old an issue can be before marking it stale.
+        days-before-stale: 180
+        # Number of days of inactivity before a stale issue is closed
+        days-before-close: 30
+
+        operations-per-run: 1500
+
+        # If an issue/PR is assigned, trust the assignee to stay involved
+        # Can revisit if these get stale
+        exempt-all-assignees: true
+        # Issues with these labels will never be considered stale
+        exempt-issue-labels: "need: discussion,cleanup"
+
+        # Label to use when marking an issue as stale
+        stale-issue-label: 'no-issue-activity?'
+        stale-pr-label: 'no-pr-activity?'
+
+        stale-issue-message: >
+          👋 Hello, this issue has been automatically marked as stale because it has not had
+          any activity for 180 days.
+          It will be closed if no further activity occurs in 30 days.
+
+          Please comment or this will be closed in 14 days.
+
+          Collaborators can add an assignee to keep this open indefinitely.
+          Thanks for your contributions to rules_sdlc 🚀 ⭐!
+
+          Access additional [Bazel Rules SDLC](https://tbd.acme/rules-sdlc) 🚀 resources:
+          - **Wiki** – https://github.com/doevelopper/rules-sdlc/wiki
+          - **Tutorials** – https://github.com/doevelopper/rules-sdlc#tutorials
+          - **Docs** – https://docs.tbd.acme
+          Access additional [rules_sdlc](https://tbd.acme) ⚡ resources:
+          - **Ultralytics HUB** – https://tbd.acme/hub
+          - **Vision API** – https://tbd.acme/rules-sdlc
+          - **About Us** – https://tbd.acme/about
+          - **Join Our Team** – https://tbd.acme/work
+          - **Contact Us** – https://tbd.acme/contact
+
+        stale-pr-message: >
+          This Pull Request has been automatically marked as stale because it has not had
+          any activity for 180 days.
+          It will be closed if no further activity occurs in 30 days.
+
+          Please comment or this will be closed in 14 days.
+
+          Collaborators can add an assignee to keep this open indefinitely.
+          Thanks for your contributions to rules_sdlc!
+
+        close-issue-message: >
+          This issue was automatically closed because it went 30 days without a reply
+          since it was labeled "no-pr-activity"
+
+        close-pr-message: >
+          This PR was automatically closed because it went 30 days without a reply
+          since it was labeled "no-pr-activity"
