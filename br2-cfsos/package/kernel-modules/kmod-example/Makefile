@@ -1,4 +1,4 @@
-obj-m += $(addsuffix .o, $(notdir $(basename $(wildcard $(BR2_EXTERNAL_KERNEL_DEV_LAB_PATH)/package/kernel-modules/kmod-example/*.c))))
+obj-m += $(addsuffix .o, $(notdir $(basename $(wildcard $(BR2_EXTERNAL_CFSOS_PATH)/package/kernel-modules/kmod-example/*.c))))
 
 .PHONY: all clean
 

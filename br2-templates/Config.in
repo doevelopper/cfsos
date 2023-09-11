@@ -1,0 +1,7 @@
+menu "Templates Application"
+
+    source "$BR2_EXTERNAL_TEMPLATE_PATH/package/applications/hello-autotools/Config.in"
+    source "$BR2_EXTERNAL_TEMPLATE_PATH/package/applications/hello-cmake/Config.in"
+    source "$BR2_EXTERNAL_TEMPLATE_PATH/package/applications/hello-makefile/Config.in"
+
+endmenu

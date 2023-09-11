@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "Starting Power Apps"
+#/usr/bin/power &

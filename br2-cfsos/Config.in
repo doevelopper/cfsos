@@ -1,3 +1,5 @@
+
+
 menu "Linux extensions"
     menu "Kernel Module Support"
         source "$BR2_EXTERNAL_CFSOS_PATH/package/esp8089/Config.in"
@@ -31,7 +33,8 @@ menu "Target packages"
         endmenu
     endmenu
 
-#     menu "Hardware Support"
+    menu "Hardware Support"
+        "source "$BR2_EXTERNAL_CFSOS_PATH/package/poll_sysfs/Config.in"
 #     #   source "$BR2_EXTERNAL_CFSOS_PATH/package/rpi-rf-mod/Config.in"
 #     #   source "$BR2_EXTERNAL_CFSOS_PATH/package/susvd/Config.in"
 #     #   source "$BR2_EXTERNAL_CFSOS_PATH/package/piusvd/Config.in"
@@ -42,7 +45,7 @@ menu "Target packages"
 #     #   source "$BR2_EXTERNAL_CFSOS_PATH/package/bluetooth-tinker/Config.in"
 #     #   source "$BR2_EXTERNAL_CFSOS_PATH/package/rpi-eeprom/Config.in"
 #     #   source "$BR2_EXTERNAL_CFSOS_PATH/package/hardkernel-boot/Config.in"
-#     endmenu
+    endmenu
 
 #     menu " Third party"
 #     #   source "$BR2_EXTERNAL_CFSOS_PATH/package/occu/Config.in"
