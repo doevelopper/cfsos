@@ -1,0 +1,57 @@
+menu "RT Executive packages: BSP, Drivers and applications."
+
+    menu "3rd Party"
+
+        menu "Monitoring tools"
+            source "$BR2_EXTERNAL_CFSOS_PATH/package/utils/atop2/Config.in"
+            source "$BR2_EXTERNAL_CFSOS_PATH/package/utils/btop/Config.in"
+            source "$BR2_EXTERNAL_CFSOS_PATH/package/utils/netatop/Config.in"
+        endmenu
+
+        menu "Network"
+
+        endmenu
+
+        menu "Benchmarking"
+
+        endmenu
+
+    endmenu
+
+    menu "Linux drivers"
+        if BR2_LINUX_KERNEL
+
+            menu "Kernel Space Linux Drivers"
+            endmenu
+
+            menu "Users Space Linux Drivers"
+            endmenu
+        endif
+    endmenu
+
+    menu "Applications"
+
+        menu "CFSOS Applications"
+            source "$BR2_EXTERNAL_CFSOS_PATH/package/applications/lan-gateway/Config.in"
+        endmenu
+
+        menu "CFSOS Applications Tests "
+
+            menu "CFSOS Unit Testing"
+
+            endmenu
+
+            menu "Regression Unit Testing"
+
+            endmenu
+
+            menu "CFSOS ATP"
+                menu "Ruby Runtime Environment"
+
+                endmenu
+            endmenu
+        endmenu
+
+    endmenu
+
+endmenu
