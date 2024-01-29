@@ -1,0 +1,49 @@
+software =
+{
+  version = "0.0.1";
+  description = "example image for raspberry3 using buildroot and br2-external"
+  stable = {
+    copy-1: {
+      images: (
+        {
+          filename = "boot.vfat.gz";
+          device = "/dev/mmcblk0p1";
+          compressed = "zlib";
+        },
+        {
+          filename = "rootfs.ext2.gz";
+          device = "/dev/mmcblk0p2";
+          compressed = "zlib";
+        }
+      );
+      scripts: (
+        {
+          filename = "change_boot_partition.sh";
+          type = "postinstall";
+          data = "root=/dev/mmcblk0p2";
+        }
+      );
+    }
+    copy-2: {
+      images: (
+        {
+          filename = "boot.vfat.gz";
+          device = "/dev/mmcblk0p1";
+          compressed = "zlib";
+        },
+        {
+          filename = "rootfs.ext2.gz";
+          device = "/dev/mmcblk0p3";
+          compressed = "zlib";
+        }
+      );
+      scripts: (
+        {
+          filename = "change_boot_partition.sh";
+          type = "postinstall";
+          data = "root=/dev/mmcblk0p3";
+        }
+      );
+    }
+  };
+}

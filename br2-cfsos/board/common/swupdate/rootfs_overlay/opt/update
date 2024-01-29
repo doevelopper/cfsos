@@ -1,0 +1,21 @@
+#!/bin/sh
+set -e -x
+URL="$1"
+CURRENT_ROOT="$(sed 's,.* root=\([^ ]\+\).*,\1,g' /proc/cmdline)"
+case "${CURRENT_ROOT}" in
+    /dev/mmcblk0p2)
+        IMAGE_TO_WRITE="stable,copy-2"
+        ;;
+    /dev/mmcblk0p3)
+        IMAGE_TO_WRITE="stable,copy-1"
+        ;;
+    *)
+        printf "Unexpected current root at '%s'" "${CURRENT_ROOT}"
+        exit 1
+        ;;
+esac
+wget -O /tmp/rootfs.swu "${URL}"
+time swupdate -v -e "${IMAGE_TO_WRITE}" -i /tmp/rootfs.swu
+echo "Will reboot in 10 seconds"
+sleep 10
+reboot

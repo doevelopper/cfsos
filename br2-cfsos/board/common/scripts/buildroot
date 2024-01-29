@@ -1,0 +1,15 @@
+#!/bin/sh
+
+PRJ_ROOT=$(realpath $(dirname $(readlink -f "$0"))/../..)
+CHECK_PACKAGE_BIN=${PRJ_ROOT}/buildroot/utils/check-package
+
+if ! [ -x ${CHECK_PACKAGE_BIN} ]; then
+  echo "ERROR: Buildroot submodule has probably not been checked out yet. Please do it with:"
+  echo "  $ git submodule init"
+  exit 1
+fi
+
+${CHECK_PACKAGE_BIN} --br2-external \
+  ${PRJ_ROOT}/package/**/*.hash ${PRJ_ROOT}/custom/package/**/*.hash \
+  ${PRJ_ROOT}/package/**/*.mk ${PRJ_ROOT}/custom/package/**/*.mk \
+  ${PRJ_ROOT}/package/**/Config.in ${PRJ_ROOT}/custom/package/**/Config.in
