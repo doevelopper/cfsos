@@ -1,0 +1,69 @@
+--- arch/arm/boot/dts/bcm2837.dtsi	2024-01-29 20:40:41.031449499 +0100
++++ arch/arm/boot/dts/bcm2837-kernel-6.1.dtsi	2024-01-29 20:52:28.887531015 +0100
+@@ -17,6 +17,17 @@
+ 			#interrupt-cells = <2>;
+ 			interrupt-parent = <&local_intc>;
+ 		};
++
++		firmware {
++			optee {
++				compatible = "linaro,optee-tz";
++				method = "smc";
++			};
++			psci {
++				compatible = "arm,psci-1.0", "arm,psci-0.2";
++				method = "smc";
++			};
++		};
+ 	};
+ 
+ 	arm-pmu {
+@@ -38,7 +49,7 @@
+ 	cpus: cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-		enable-method = "brcm,bcm2836-smp"; // for ARM 32-bit
++		//enable-method = "brcm,bcm2836-smp"; // for ARM 32-bit
+ 
+ 		/* Source for d/i-cache-line-size and d/i-cache-sets
+ 		 * https://developer.arm.com/documentation/ddi0500/e/level-1-memory-system
+@@ -51,8 +62,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0>;
+-			enable-method = "spin-table";
+-			cpu-release-addr = <0x0 0x000000d8>;
++                        enable-method = "psci";
+ 			d-cache-size = <0x8000>;
+ 			d-cache-line-size = <64>;
+ 			d-cache-sets = <128>; // 32KiB(size)/64(line-size)=512ways/4-way set
+@@ -66,8 +76,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <1>;
+-			enable-method = "spin-table";
+-			cpu-release-addr = <0x0 0x000000e0>;
++                        enable-method = "psci";
+ 			d-cache-size = <0x8000>;
+ 			d-cache-line-size = <64>;
+ 			d-cache-sets = <128>; // 32KiB(size)/64(line-size)=512ways/4-way set
+@@ -81,8 +90,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <2>;
+-			enable-method = "spin-table";
+-			cpu-release-addr = <0x0 0x000000e8>;
++			enable-method = "psci";
+ 			d-cache-size = <0x8000>;
+ 			d-cache-line-size = <64>;
+ 			d-cache-sets = <128>; // 32KiB(size)/64(line-size)=512ways/4-way set
+@@ -96,8 +104,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <3>;
+-			enable-method = "spin-table";
+-			cpu-release-addr = <0x0 0x000000f0>;
++			enable-method = "psci";
+ 			d-cache-size = <0x8000>;
+ 			d-cache-line-size = <64>;
+ 			d-cache-sets = <128>; // 32KiB(size)/64(line-size)=512ways/4-way set

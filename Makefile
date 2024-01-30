@@ -7,6 +7,7 @@
 #   https://github.com/fhunleth/bbb-buildroot-fwup/blob/master/Makefile
 #   https://github.com/RosePointNav/nerves-sdk/blob/master/Makefile
 #   https://github.com/jens-maus/RaspberryMatic/blob/master/Makefile
+#   wget https://git.busybox.net/buildroot/plain/configs/raspberrypi3_64_defconfig
 ##################################################################################################################################
 
 include define.mk
@@ -257,6 +258,14 @@ $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-certificate): %-checksum:
 # #	$(Q)git submodule init
 # #	$(Q)git submodule update --recursive
 # #	$(Q)touch $@
+
+# OPTEE_BASE=$(pwd)
+# export PATH=${OPTEE_BASE}/buildroot/output/host/bin:${OPTEE_BASE}/myrootfs/usr/include:${OPTEE_BASE}/myrootfs/usr/lib:$PATH
+# export TA_DEV_KIT_DIR=${OPTEE_BASE}/optee_os/out/arm-plat-rpi4/export-ta_arm64
+# export TEEC_EXPORT=${OPTEE_BASE}/buildroot/output/host/aarch64-buildroot-linux-gnu/sysroot/usr
+# export CROSS_COMPILE=aarch64-buildroot-linux-gnu-
+# export HOST_CROSS_COMPILE=aarch64-buildroot-linux-gnu-
+# export TA_CROSS_COMPILE=aarch64-buildroot-linux-gnu-
 
 .PHONY: help
 help: ## Display this help and exits.
