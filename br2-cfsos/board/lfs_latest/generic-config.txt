@@ -1,0 +1,69 @@
+## Model 1A, Model 1B, Model 1A+, Model 1B+, Compute Module 1
+[pi1]
+
+
+
+## Model 2B (BCM2836- or BCM2837-based)
+[pi2]
+
+
+
+## Model 3B, Model 3B+, Model 3A+, Compute Module 3, Compute Module 3+
+[pi3]
+
+
+
+## Model 3A+, Model 3B+ (also sees [pi3] contents)
+[pi3+]
+
+
+
+## Model 4B, Pi 400, Compute Module 4, Compute Module 4S
+[pi4]
+
+
+
+## Raspberry Pi 5
+[pi5]
+
+
+
+## Pi 400 (also sees [pi4] contents)
+[pi400]
+
+
+## Compute Module 4 (also sees [pi4] contents)
+[cm4]
+
+
+
+## Compute Module 4S (also sees [pi4] contents)
+[cm4s]
+
+
+
+## Zero, Zero W, Zero 2 W
+[pi0]
+
+
+
+## Zero W (also sees [pi0] contents)
+[pi0w]
+
+
+
+## Zero 2 W (also sees [pi0w] and [pi0] contents)
+[pi02]
+
+
+
+## [board-type=Type]
+## Filter by Type number - see Raspberry Pi Revision Codes E.g [board-type=0x14] would match CM4.
+
+
+## Prevents any settings that follow from being applied to any hardware. 
+[none]
+
+
+## Settings here are applied to all hardware
+[all]

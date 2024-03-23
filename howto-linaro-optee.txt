@@ -1,0 +1,46 @@
+
+- repo init -u https://github.com/OP-TEE/manifest.git -m rpi3.xml -b 4.1.0
+- repo sync --help
+- repo sync -v -j`nproc` --no-clone-bundle
+
+- vi .repo/manifests/rpi3.xml
+    firmware Locate the string 1.20190401 and change it to 1.20230405
+    linux rpi3-optee-6.7
+    ta V2.10
+- vi build/rpi3/firmware/uboot.env.txt
+    # bootcmd & bootargs configuration
+    preboot=usb start
+    bootcmd=run mmcboot
+    load_kernel=fatload mmc 0:1 ${kernel_addr_r} kernel8.img
+    + load_fdt=fatload mmc 0:1 ${fdt_addr_r} bcm2710-rpi-3-b-plus.dtb
+    - mmcboot=run load_kernel; run set_bootargs_tty set_bootargs_mmc set_common_args; run boot_it
+    - nfsboot=run load_kernel; run set_bootargs_tty set_bootargs_nfs set_common_args; run boot_it
+    + mmcboot=run load_fdt; run load_kernel; run set_bootargs_tty set_bootargs_mmc set_common_args; run boot_it
+    + nfsboot=run load_fdt; run load_kernel; run set_bootargs_tty set_bootargs_nfs set_common_args; run boot_it
+
+- repo sync -m rpi3.xml -j$(nproc) --no-clone-bundle
+- cd build
+- make
+- make [clang]toochains
+- make sd
+
+
+
+export PATH="${HOME}/.bin:${PATH}"
+export PATH=$PATH:${HOME}/.bin:/opt/compilers/arm-none-linux-gnueabihf-13.2/bin:/opt/compilers/aarch64-none-linux-gnu-13.2/bin
+export PATH=$PATH:/home/hroland/developpements/repositories/0gcc-armta-linaro-optee-uboot/toolchains/rust/.cargo/bin
+
+wget https://developer.arm.com/-/media/Files/downloads/gnu/13.2.rel1/binrel/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-linux-gnueabihf.tar.xz
+wget https://developer.arm.com/-/media/Files/downloads/gnu/13.2.rel1/binrel/arm-gnu-toolchain-13.2.rel1-x86_64-aarch64-none-linux-gnu.tar.xz
+
+
+make toolchains
+echo "PATH=\$PATH:/home/optee/qemu-optee/toolchains/aarch64/bin:/home/optee/qemu-optee/toolchains/aarch32/bin" >> ~/.bashrc
+make 2>&1 | tee build.log
+
+# include new_toolchain.mk <----- Comment this line out
+# Add the following lines
+AARCH32_CROSS_COMPILE 		?= arm-none-linux-gnueabihf-
+AARCH64_CROSS_COMPILE 		?= aarch64-none-linux-gnu-
+
+

@@ -1,3 +1,12 @@
+#
+# Copyright (c) 2022-2024, ACME AHL Limited and Contributors. All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+
+#             __|__
+#      --@--@--(_)--@--@--
+
 .DEFAULT_GOAL:=help
 #
 # Project Makefile
@@ -8,9 +17,25 @@
 #   https://github.com/RosePointNav/nerves-sdk/blob/master/Makefile
 #   https://github.com/jens-maus/RaspberryMatic/blob/master/Makefile
 #   wget https://git.busybox.net/buildroot/plain/configs/raspberrypi3_64_defconfig
+#   grep -inRsH "BR2_TARGET_UBOOT\|BR2_PACKAGE_HOST_UBOOT" /<path>/buildroot/configs/
 ##################################################################################################################################
 
-include define.mk
+MAKE_HELPERS_DIRECTORY := helpers/
+
+ROOT			       := $(dir $(abspath $(firstword $(MAKEFILE_LIST))))
+
+define receipe
+	make -C "$(OUTPUT)/buildroot" BR2_EXTERNAL="$(ROOT)" O="$(OUTPUT)" $(1)
+endef
+
+# .PHONY: buildroot-menuconfig
+# buildroot-menuconfig: prepare
+# 	$(call buildroot,menuconfig)
+# 	$(call buildroot,savedefconfig)
+
+
+include ${MAKE_HELPERS_DIRECTORY}define.mk
+include ${MAKE_HELPERS_DIRECTORY}macros.mk
 
 .NOTPARALLEL: $(SUPPORTED_TARGETS) $(TARGETS_CONFIG) all
 
@@ -76,20 +101,22 @@ $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-configure): %-configure: $
 # 			$(call MESSAGE,"BLRT [configuration for $* alredy done]") \
 #		fi
 
+# 2>&1 | tee $(BLRT_OOSB)/$*-build-artifacts/$(DATE)_buildroot_$@_output.log
+
 $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-compile): %-compile:
 	$(Q)$(call MESSAGE,"[  Compiling artifacts for targets $*]")
 	$(Q)$(BLRT_MAKE) $(BLRT_MAKEARGS) BR2_CCACHE_DIR=$(BLRT_PACKAGE_DIR)/cache/cc/$* O=$(BLRT_OOSB)/$*-build-artifacts
 	$(Q)mkdir -pv $(BLRT_ARTIFACTS_DIR)
 	$(Q)$(call MESSAGE,"[ Copying artifacts to $(BLRT_ARTIFACTS_DIR)/$*]")
-	$(Q)if [ -d $(BLRT_ARTIFACTS_DIR)/$* ]; then rm -Rvf $(BLRT_ARTIFACTS_DIR)/$* && mkdir -pv $(BLRT_ARTIFACTS_DIR)/$*; fi
-	$(Q)cp -Rv $(BLRT_OOSB)/$*-build-artifacts/images $(BLRT_ARTIFACTS_DIR)/$*
+	$(Q)if [ -d $(BLRT_ARTIFACTS_DIR)/$* ]; then rm -Rf $(BLRT_ARTIFACTS_DIR)/$* && mkdir -pv $(BLRT_ARTIFACTS_DIR)/$*; fi
+	$(Q)cp -R $(BLRT_OOSB)/$*-build-artifacts/images $(BLRT_ARTIFACTS_DIR)/$*
 	$(Q)$(call MESSAGE,"[  Copying binaries to tftp server]")
-	$(Q)rm -vf /srv/tftp/*
-	$(Q)cp -nuv $(BLRT_OOSB)/$*-build-artifacts/images/u-boot.bin /srv/tftp/ 2>/dev/null || :
-	$(Q)cp -nuv $(BLRT_OOSB)/$*-build-artifacts/images/*.dtb /srv/tftp/
-	$(Q)cp -nuv $(BLRT_OOSB)/$*-build-artifacts/images/*mage /srv/tftp/
+	$(Q)rm -f /srv/tftp/*
+	$(Q)cp -nu $(BLRT_OOSB)/$*-build-artifacts/images/u-boot.bin /srv/tftp/ 2>/dev/null || :
+	$(Q)cp -nu $(BLRT_OOSB)/$*-build-artifacts/images/*.dtb /srv/tftp/
+	$(Q)cp -nu $(BLRT_OOSB)/$*-build-artifacts/images/*mage /srv/tftp/
 	$(Q)$(call MESSAGE,"[  Artifacts :]")
-	$(Q)du -sh $(BLRT_OOSB)/$*-build-artifacts/images/*
+	$(Q)du -sch --time $(BLRT_OOSB)/$*-build-artifacts/images/*
 
 $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-unit-test): %-unit-test: %-compile
 	$(Q)$(call MESSAGE,"[  Running Unit test for targets $*]")
@@ -102,10 +129,10 @@ $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-menuconfig): %-menuconfig:
 	$(Q)$(MAKE) $(BLRT_MAKEARGS) BR2_CCACHE_DIR=$(BLRT_PACKAGE_DIR)/cache/cc/$* O=$(BLRT_OOSB)/$*-build-artifacts $(subst $*-,,$@)
 	$(Q)echo
 	$(Q)echo "!!! Important !!!"
-	$(Q)echo "1. $(DEFCONFIG_DIR_FULL)/$*_defconfig has $(TERM_RED) NOTNOT $(TERM_RESET) been updated."
+	$(Q)echo "1. $(DEFCONFIG_DIR_FULL)/$*_defconfig has $(TERM_RED) NOT/NIET/NADA $(TERM_RESET) been updated."
 	$(Q)echo "   Changes will be lost if you run 'make distclean'."
 	$(Q)echo "   Run $(TERM_BOLD) 'make $*-savedefconfig' $(TERM_RESET) to update."
-	$(Q)echo "2. Buildroot normally requires you to run 'make clean' and 'make' after"
+	$(Q)echo "2. ERROR: Buildroot normally requires you to run 'make clean' and 'make' after"
 	$(Q)echo "   changing the configuration. You don't technically have to do this,"
 	$(Q)echo "   but if you're new to Buildroot, it's best to be safe."
 
@@ -174,6 +201,7 @@ $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-release): %-release: %-int
 # ##################################################################################################################################
 
 $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-clean): %-clean:
+	$(Q)$(call MESSAGE,"[ Delete all files created by $*'s build]")
 	$(Q)$(MAKE) $(BLRT_MAKEARGS) BR2_CCACHE_DIR=$(BLRT_PACKAGE_DIR)/cache/cc/$* O=$(BLRT_OOSB)/$*-build-artifacts $(subst $*-,,$@)
 
 $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-distclean): %-distclean:
@@ -181,6 +209,7 @@ $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-distclean): %-distclean:
 # # $(Q)$(MAKE) $(BLRT_MAKEARGS) BR2_CCACHE_DIR=$(BLRT_PACKAGE_DIR)/cache/cc/$* O=$(BLRT_OOSB)/$*-build-artifacts $(subst $*-,,$@)
 # # $(Q)$(call MESSAGE,"BLRT [Re-generating configuration for $*]")
 # # $(Q)$(MAKE) $(BLRT_MAKEARGS) BR2_CCACHE_DIR=$(BLRT_PACKAGE_DIR)/cache/cc/$* O=$(BLRT_OOSB)/$*-build-artifacts  $*_defconfig
+	$(call SHELL_REMOVE_DIR,${BUILD_BASE})
 
 $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-realclean): %-realclean:
 	$(Q)$(call MESSAGE,"[ Wiping everything ]")
@@ -224,8 +253,57 @@ $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-checksum): %-checksum:
 	$(Q)$(call MESSAGE,"[ Generating $* artifacts checksum]")
 
 
-$(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-certificate): %-checksum:
-	$(Q)$(call MESSAGE,"[ Generating $* RAUC/swupdate/webs certificates]")
+$(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-regenerate): %-regenerate:
+	$(Q)$(call MESSAGE,"[ Clean for regenerating $*  a new]")
+	$(Q)rm -rf $(BLRT_OOSB)/$*-build-artifacts/target
+	$(Q)find $(BLRT_OOSB)/$*-build-artifacts/ -name ".stamp_target_installed" -delete
+#	$(Q)rm -f =$(BLRT_OOSB)/$*-build-artifacts/build/host-gcc-final-*/.stamp_host_installed
+
+
+$(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-certificate): %-certificate:  # Generqte qrious certificates
+	$(Q)$(call MESSAGE,"[ $*'s various certificates generation a new]")
+
+# @if grep -q 'BR2_PACKAGE_LIBOPENSSL_BIN=y' $(BLRT_OOSB)/$*-build-artifacts/.config; 	\
+# then 																					\
+# 	echo "--- Certificates $* generation---" ;  										\
+# 	mkdir -pv $(CERTS_DIR)/openssl-ca/{root,private,certs}           					\
+# 	touch "$(CERTS_DIR)/openssl-ca/index.txt" 											\
+# 	test -f $(CERTS_DIR)/openssl-ca/serial || echo 00 > $(CERTS_DIR)/openssl-ca/serial 	\
+# else 																					\
+# 	echo "--- (SKIP cert generatrion) $* ---" ; 										\
+# fi \
+
+
+
+# debug:
+# 	@[ -f $(O)/staging/.gdbinit ]    || cp $(CURDIR)/.gdbinit $(O)/staging/.gdbinit
+# 	@[ -f $(O)/staging/.gdbinit.py ] || cp $(CURDIR)/.gdbinit.py $(O)/staging/.gdbinit.py
+# 	@(cd $(O)/staging/ && gdb-multiarch)
+
+
+# echo "--- Generation $* ca.key---" ;  \
+# openssl genrsa -out $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-ca.key 4096 \
+# echo "--- Generation $* ca.csr---" ;  \
+# openssl req -sha256 -key $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-ca.key -days 365 -new -out $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-ca.csr -config $(CERTS_DIR)/openssl-ca/demo-openssl.cnf -extensions v3_ca -subj "/C=US/ST=Maryland/O=ACME Systems Technologies/CN=Sample CA" \
+# echo "--- Generation $* ca.crt---" ;  \
+# openssl x509 -sha256 -req -in $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-ca.csr -signkey $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-ca.key -out $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-ca.crt -extfile $(CERTS_DIR)/openssl-ca/demo-openssl.cnf -extensions v3_ca -days 365 \
+# echo "--- Generation $* server.key---" ;  \
+# openssl genrsa -out $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-server.key 2048 \
+# echo "--- Generation $* server.csr---" ;  \
+# openssl req -sha256 -key $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-server.key -days 365 -new -out $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-server.csr -config $(CERTS_DIR)/openssl-ca/demo-openssl.cnf -subj "/C=US/ST=Maryland/O=ACME Systems Technologies/CN=test-server" \
+# echo "--- Generation $* server.crt---" ;  \
+# openssl ca -batch -config $(CERTS_DIR)/openssl-ca/demo-openssl.cnf -in $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-server.csr -out $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-server.crt -outdir . -keyfile $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-ca.key -cert $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-ca.crt -days 120 \
+
+# 	@if grep -q 'BR2_TARGET_UBOOT=y' $(BLRT_OOSB)/$*-build-artifacts/.config; then
+# 		$(Q)$(call MESSAGE,"[ Generating $* Rauc  certificate]")
+# # This is a Test Ceritificate Authority, only to be used for testing.
+# # $(Q)$(call MESSAGE,"[ Generating $* Swupdate certificate]")
+# # $(Q)$(call MESSAGE,"[ Generating $* Webs certificate]")
+# # $(Q)$(call MESSAGE,"[ Generating $* Tee certificate]")
+# 	else 
+# 		$(Q)$(call MESSAGE,"[ --- (UBOOT not activated SKIPPING $@ ---]")
+# 	fi
+
 # # # ####################################################################################################
 # # # #
 # # # #								Hidden goals declaration
@@ -294,3 +372,6 @@ help: ## Display this help and exits.
 	$(Q)echo "| https://memyselandi_ad_exem/ | _/*\_ | / \ HTML MAIL    |   v   conspiracy.   |"
 	$(Q)echo "'------------------------------^-------^------------------^---------------------'"
 	$(Q)echo ""
+#	@grep '^[^.#]\+:\s\+.*#' Makefile | \
+#	sed "s/\(.\+\):\s*\(.*\) #\s*\(.*\)/`printf "\033[93m"`\1`printf "\033[0m"`	\3 [\2]/" | \
+#	expand -t20

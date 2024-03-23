@@ -1,11 +1,32 @@
+# config BR2_CFSOS_DEVEL_BUILD
+# 	bool
+# 	option env="BR2_CFSOS_DEVEL_BUILD"
+# 	help
+# 		Developers at Laird can access the closed source repositories,
+# 		so they should set this flag to directly build from the closed
+# 		source repositories under $BR2_EXTERNAL_CFSOS_CLOSED_SOURCE_PATH/package.
+
+# config BR2_SUMMIT_SECURE_BOOT
+# 	bool "Summit Secure Boot"
+# 	select BR2_TARGET_UBOOT_NEEDS_OPENSSL
+# 	help
+# 		This enables "traditional" (down to kernel) secure boot
+# 		rootfs security provided by BR2_PACKAGE_CFSOS_ENCRYPTED_STORAGE_TOOLKIT
+
+
 menu "RT Executive packages: BSP, Drivers and applications."
 
+    menu "Packages (Upstream)"
+        source "$BR2_EXTERNAL_CFSOS_PATH/package/cfsos-br/Config.in"
+        source "$BR2_EXTERNAL_CFSOS_PATH/package/cfsos-br/Config.in.host"
+    endmenu
+
     menu "Template packages"
-        comment "Template Cmake,MAkefile and autotools packages"
+        comment "Template Cmake,Makefile and autotools packages"
         source "$BR2_EXTERNAL_CFSOS_PATH/package/template/hello-autotools/Config.in"
         source "$BR2_EXTERNAL_CFSOS_PATH/package/template/hello-cmake/Config.in"
         source "$BR2_EXTERNAL_CFSOS_PATH/package/template/hello-makefile/Config.in"
-
+        source "$BR2_EXTERNAL_CFSOS_PATH/package/drivers/example-module-overlay/Config.in"
     endmenu
 
     menu "3rd Party"
@@ -30,6 +51,8 @@ menu "RT Executive packages: BSP, Drivers and applications."
         if BR2_LINUX_KERNEL
 
             menu "Kernel Space Linux Drivers"
+                source "$BR2_EXTERNAL_CFSOS_PATH/package/drivers/kernel-space/foobar_module/Config.in"
+                source "$BR2_EXTERNAL_CFSOS_PATH/package/drivers/kernel-space/foobar_chrdev/Config.in"
             endmenu
 
             menu "Users Space Linux Drivers"

@@ -9,7 +9,7 @@
 # LOG4CXX_VERSION = ff453105b54d895c87d93c0e82727d4484294ef8
 # LOG4CXX_SITE = https://github.com/apache/logging-log4cxx.git
 # LOG4CXX_SITE_METHOD = git
-LOG4CXX_VERSION = v1.1.0
+LOG4CXX_VERSION = v1.2.0
 LOG4CXX_SITE = https://archive.apache.org/dist/logging/log4cxx/$(LOG4CXX_VERSION)
 LOG4CXX_SOURCE = apache-log4cxx-$(LOG4CXX_VERSION).tar.gz
 LOG4CXX_INSTALL_STAGING = YES
