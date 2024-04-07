@@ -1,0 +1,50 @@
+menuconfig BR2_PACKAGE_RPI_WIFI
+	bool "rpi-wifi"
+	select BR2_PACKAGE_BRCMFMAC_SDIO_FIRMWARE_RPI
+	select BR2_PACKAGE_BRCMFMAC_SDIO_FIRMWARE_RPI_WIFI
+	select BR2_PACKAGE_IFUPDOWN_SCRIPTS
+	select BR2_PACKAGE_WPA_SUPPLICANT
+	select BR2_PACKAGE_WPA_SUPPLICANT_NL80211
+	help
+	  This package configures WiFi for Raspberry Pi
+	  and allows also configuring OpenSSH with root access,
+	  resulting in very easy headless access for RPi devices over WiFi.
+	  Selects also havenged to aid with random generator initialization 
+	  with OpenSSH for significanly faster boot.
+	  
+	  You MUST first apply the _defconfig, i.e.
+	     make raspberrypi0w_defconfig
+	  or make raspberrypi3_defconfig
+	  etc... 
+
+	  Author: Simo Erkinheimo, 20.03.2022
+
+if BR2_PACKAGE_RPI_WIFI
+
+config BR2_PACKAGE_RPI_WIFI_MODPROBE
+	bool "modprobe brcmfmac at inittab"
+	default y
+	depends on !BR2_PACKAGE_EUDEV
+	help
+	  This needs to be done if device management
+	  does not automatically load the wifi module.
+	  At least eudev automates this, but there might be
+	  other packages too.
+
+config BR2_PACKAGE_RPI_WIFI_SSID
+	string "Wifi SSID"
+
+config BR2_PACKAGE_RPI_WIFI_PWD
+	string "Wifi Password"
+
+config BR2_PACKAGE_RPI_WIFI_SSH_WITH_ROOT_LOGIN
+	bool "OpenSSH Server with root login enabled + HAVENGED for faster boot"
+	select BR2_PACKAGE_OPENSSH
+	select BR2_PACKAGE_OPENSSH_SERVER
+	select BR2_PACKAGE_HAVEGED
+	
+config BR2_TARGET_GENERIC_ROOT_PASSWD
+	string "Root password (COMPULSORY!)"
+	depends on BR2_PACKAGE_RPI_WIFI_SSH_WITH_ROOT_LOGIN
+
+endif

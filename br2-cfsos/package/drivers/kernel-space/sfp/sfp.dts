@@ -1,0 +1,24 @@
+/dts-v1/;
+/plugin/;
+
+/*
+** Device Tree Overlay ...
+**  ... for RaspberryPi
+**
+** Copyright (c) 2022-2024 John doe <mail@john-doe.de>
+** Licensed under Apache 2.0
+**
+*/
+
+/ {
+    i2c@pqr {
+        #address-cells = <0x1>;
+        #size-cells = <0x0>;
+        reg = <0xpqr>;
+        sfp@50 {
+            compatible = "qsfp-dd";
+            reg = <0x50>;
+            label = "sfp_eeprom#1";
+        };
+    };
+};

@@ -1,0 +1,3 @@
+config BR2_PACKAGE_PYTHON_MYMATH
+	bool "mymath: Pure Python"
+	depends on BR2_PACKAGE_PYTHON3

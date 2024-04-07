@@ -1,0 +1,48 @@
+// Device tree overlay for I2C connected PCF8574AT GPIO expander
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "brcm,bcm2835";
+
+	fragment@0 {
+		target = <&gpio>;
+		__overlay__ {
+			pcf8574a_pins: pcf8574a_pins {
+				brcm,pins = <22>; // IRQ
+				brcm,function = <0>; // input
+				brcm,pull = <2>; // pull-up
+			};
+		};
+	};
+
+	fragment@1 {
+		target = <&i2c1>;
+		__overlay__ {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "okay";
+
+			pcf8574a: pcf8574a@3f {
+				compatible = "nxp,pcf8574a";
+				reg = <0x3f>;
+				#gpio-cells = <2>;
+				gpio-controller;
+				pinctrl-names = "default";
+				pinctrl-0 = <&pcf8574a_pins>;
+				interrupt-parent = <&gpio>;
+				interrupt-controller;
+				#interrupt-cells = <2>;
+				interrupts = <22 2>; // GPIO 22, falling edge triggered.
+				irq-gpios = <&gpio 22 1>; // GPIO 22, on 40p header.
+			};
+		};
+	};
+
+	__overrides__ {
+		addr = <&pcf8574a>,"reg:0";
+		interrupt = <&pcf8574a_pins>,"brcm,pins:0",
+			<&pcf8574a>,"interrupts:0",
+			<&pcf8574a>,"irq-gpios:4";
+	};
+};

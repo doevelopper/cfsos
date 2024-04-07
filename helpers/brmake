@@ -2,6 +2,8 @@
 # (C) 2016, "Yann E. MORIN" <yann.morin.1998@free.fr>
 # License: WTFPL, https://spdx.org/licenses/WTFPL.html
 
+creation_date = $(date -d "today" +"%Y_%m_%d_%H_%M_%S")
+
 main() {
     local ret start d h m mf
 
@@ -16,8 +18,8 @@ main() {
     > >( while read -r line; do
              printf "%(%Y-%m-%dT%H:%M:%S)T %s\n" -1 "${line}"
          done \
-         |tee -a br.log \
-         |grep --colour=never -E '>>>'
+         | tee -a br-$(creation_date).log \
+         | grep --colour=never -E '>>>'
        )
     ret=${?}
 

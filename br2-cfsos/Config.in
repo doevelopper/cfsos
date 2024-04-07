@@ -29,6 +29,11 @@ menu "RT Executive packages: BSP, Drivers and applications."
         source "$BR2_EXTERNAL_CFSOS_PATH/package/drivers/example-module-overlay/Config.in"
     endmenu
 
+    menu "Configuration"
+        # source "$BR2_EXTERNAL_CFSOS_PATH/package/utils/rpi-config/Config.in"
+        # source "$BR2_EXTERNAL_CFSOS_PATH/package/utils/rpi-cmdline/Config.in"
+    endmenu
+
     menu "3rd Party"
 
         menu "Monitoring tools"
@@ -53,6 +58,11 @@ menu "RT Executive packages: BSP, Drivers and applications."
             menu "Kernel Space Linux Drivers"
                 source "$BR2_EXTERNAL_CFSOS_PATH/package/drivers/kernel-space/foobar_module/Config.in"
                 source "$BR2_EXTERNAL_CFSOS_PATH/package/drivers/kernel-space/foobar_chrdev/Config.in"
+                source "$BR2_EXTERNAL_CFSOS_PATH/package/drivers/kernel-space/gpio/Config.in"
+                source "$BR2_EXTERNAL_CFSOS_PATH/package/drivers/kernel-space/helloworld/Config.in"
+                source "$BR2_EXTERNAL_CFSOS_PATH/package/drivers/kernel-space/i2c/Config.in"
+                source "$BR2_EXTERNAL_CFSOS_PATH/package/drivers/kernel-space/gpio_i2c/Config.in"
+                source "$BR2_EXTERNAL_CFSOS_PATH/package/drivers/kernel-space/gpio_pulse_counter/Config.in"
             endmenu
 
             menu "Users Space Linux Drivers"
@@ -75,6 +85,14 @@ menu "RT Executive packages: BSP, Drivers and applications."
             source "$BR2_EXTERNAL_CFSOS_PATH/package/applications/lan-gateway/Config.in"
             source "$BR2_EXTERNAL_CFSOS_PATH/package/applications/rpi-eeprom/Config.in"
         endmenu
+
+        # if BR2_PACKAGE_PYTHON || BR2_PACKAGE_PYTHON3
+        #     menu "External python modules"
+        #         source "$BR2_EXTERNAL_CFSOS_PATH/package/python-scapy/Config.in"
+        #         source "$BR2_EXTERNAL_CFSOS_PATH/package/applications/python-mymath/Config.in"
+        #         source "$BR2_EXTERNAL_CFSOS_PATH/package/applications/python-mycmath/Config.in"
+        #     endmenu
+        # endif
 
         menu "CFSOS Applications Tests "
 

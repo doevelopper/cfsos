@@ -1,0 +1,8 @@
+config BR2_PACKAGE_SFP
+     tristate "Driver for SFP+, QSFP+, QSFP28 and QSFP-DD modules"
+     default n
+     depends on I2C
+     help
+         enables communication with SFP modules
+
+

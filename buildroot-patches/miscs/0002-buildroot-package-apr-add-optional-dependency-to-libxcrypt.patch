@@ -1,0 +1,151 @@
+From patchwork Wed Apr  3 15:36:34 2024
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Bernd Kuhls <bernd@kuhls.net>
+X-Patchwork-Id: 1919366
+Return-Path: <buildroot-bounces@buildroot.org>
+X-Original-To: incoming-buildroot@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming-buildroot@legolas.ozlabs.org
+Authentication-Results: legolas.ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=buildroot.org
+ (client-ip=2605:bc80:3010::137; helo=smtp4.osuosl.org;
+ envelope-from=buildroot-bounces@buildroot.org; receiver=patchwork.ozlabs.org)
+Received: from smtp4.osuosl.org (smtp4.osuosl.org [IPv6:2605:bc80:3010::137])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by legolas.ozlabs.org (Postfix) with ESMTPS id 4V8plB2dCsz23tl
+	for <incoming-buildroot@patchwork.ozlabs.org>;
+ Thu,  4 Apr 2024 02:36:54 +1100 (AEDT)
+Received: from localhost (localhost [127.0.0.1])
+	by smtp4.osuosl.org (Postfix) with ESMTP id F2AC741518;
+	Wed,  3 Apr 2024 15:36:51 +0000 (UTC)
+X-Virus-Scanned: amavis at osuosl.org
+Received: from smtp4.osuosl.org ([127.0.0.1])
+ by localhost (smtp4.osuosl.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id TEiCt8Qsz5MX; Wed,  3 Apr 2024 15:36:50 +0000 (UTC)
+X-Comment: SPF check N/A for local connections - client-ip=140.211.166.34;
+ helo=ash.osuosl.org; envelope-from=buildroot-bounces@buildroot.org;
+ receiver=<UNKNOWN>
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp4.osuosl.org BCC92410D1
+Received: from ash.osuosl.org (ash.osuosl.org [140.211.166.34])
+	by smtp4.osuosl.org (Postfix) with ESMTP id BCC92410D1;
+	Wed,  3 Apr 2024 15:36:49 +0000 (UTC)
+X-Original-To: buildroot@lists.busybox.net
+Delivered-To: buildroot@osuosl.org
+Received: from smtp3.osuosl.org (smtp3.osuosl.org [140.211.166.136])
+ by ash.osuosl.org (Postfix) with ESMTP id 156FA1BF5A0
+ for <buildroot@lists.busybox.net>; Wed,  3 Apr 2024 15:36:48 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+ by smtp3.osuosl.org (Postfix) with ESMTP id 0247B60EA2
+ for <buildroot@lists.busybox.net>; Wed,  3 Apr 2024 15:36:48 +0000 (UTC)
+X-Virus-Scanned: amavis at osuosl.org
+Received: from smtp3.osuosl.org ([127.0.0.1])
+ by localhost (smtp3.osuosl.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id M3FiTwY18vPF for <buildroot@lists.busybox.net>;
+ Wed,  3 Apr 2024 15:36:47 +0000 (UTC)
+Received-SPF: Pass (mailfrom) identity=mailfrom; client-ip=85.13.140.57;
+ helo=dd20012.kasserver.com; envelope-from=bernd@kuhls.net;
+ receiver=<UNKNOWN>
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp3.osuosl.org A377860EBB
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp3.osuosl.org A377860EBB
+Received: from dd20012.kasserver.com (dd20012.kasserver.com [85.13.140.57])
+ by smtp3.osuosl.org (Postfix) with ESMTPS id A377860EBB
+ for <buildroot@buildroot.org>; Wed,  3 Apr 2024 15:36:45 +0000 (UTC)
+Received: from fli4l.lan.fli4l (p4fd6cf33.dip0.t-ipconnect.de [79.214.207.51])
+ by dd20012.kasserver.com (Postfix) with ESMTPSA id 5AA82A4C18E8
+ for <buildroot@buildroot.org>; Wed,  3 Apr 2024 17:36:42 +0200 (CEST)
+Received: from bruckner.lan.fli4l ([192.168.1.1]:35774)
+ by fli4l.lan.fli4l with esmtp (Exim 4.97.1)
+ (envelope-from <bernd@kuhls.net>) id 1rs2fJ-000000000Rn-37Hr
+ for buildroot@buildroot.org; Wed, 03 Apr 2024 15:36:42 +0000
+From: Bernd Kuhls <bernd@kuhls.net>
+To: buildroot@buildroot.org
+Date: Wed,  3 Apr 2024 17:36:34 +0200
+Message-Id: <20240403153641.4122789-2-bernd@kuhls.net>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240403153641.4122789-1-bernd@kuhls.net>
+References: <20240403153641.4122789-1-bernd@kuhls.net>
+MIME-Version: 1.0
+X-Spamd-Bar: +
+X-Mailman-Original-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=kuhls.net;
+ s=kas202312101026; t=1712158602;
+ bh=AqnlTGL6ldqyxL+bA0palTFLBiZ/E99D5/3BgNkce2A=;
+ h=From:To:Subject:Date:In-Reply-To:References:From;
+ b=QfyJcP70UuxyWZ7OXHzc4ue0+QQteuHWSrMLDQCVX6B7dZCj423QR5JTSJJeYmjYp
+ ZTLktLwLxCjGa07oe3/a6wc6d17pGclaXhtggMfw4j71VDifedSimPqiy19AfEq6dU
+ 4Si1Ia2tbzqE1xC7bqbkUUyiCMEncIR3rU/sOz+Sy6IBDu7Xd1N2fuM4MlEtrS84wx
+ VJEHLHZ+IECvaXFEl/36DZU4+q5h0yXj1Mm4Qkm+00uiEiEBNZom8qMnthNwinbz4y
+ wgh8ESNTjIMRYzZpoyG82vAGbj9qusU2SPcASW6DWQHCa3buxJaJZnyZgeXW/gWkPg
+ S65GowUR3Y+kw==
+X-Mailman-Original-Authentication-Results: smtp3.osuosl.org;
+ dmarc=pass (p=none dis=none)
+ header.from=kuhls.net
+X-Mailman-Original-Authentication-Results: smtp3.osuosl.org;
+ dkim=pass (2048-bit key,
+ unprotected) header.d=kuhls.net header.i=@kuhls.net header.a=rsa-sha256
+ header.s=kas202312101026 header.b=QfyJcP70
+Subject: [Buildroot] [PATCH 2/9] package/apr: add optional dependency to
+ libxcrypt
+X-BeenThere: buildroot@buildroot.org
+X-Mailman-Version: 2.1.29
+Precedence: list
+List-Id: Discussion and development of buildroot <buildroot.buildroot.org>
+List-Unsubscribe: <https://lists.buildroot.org/mailman/options/buildroot>,
+ <mailto:buildroot-request@buildroot.org?subject=unsubscribe>
+List-Archive: <http://lists.buildroot.org/pipermail/buildroot/>
+List-Post: <mailto:buildroot@buildroot.org>
+List-Help: <mailto:buildroot-request@buildroot.org?subject=help>
+List-Subscribe: <https://lists.buildroot.org/mailman/listinfo/buildroot>,
+ <mailto:buildroot-request@buildroot.org?subject=subscribe>
+Errors-To: buildroot-bounces@buildroot.org
+Sender: "buildroot" <buildroot-bounces@buildroot.org>
+
+When glibc was bumped to version 2.39 in commit
+b5680f53d60acf8ff6010082f873438a39bd5d97 it removed the deprecated
+libcrypt support.
+
+As glibc's libcrypt was providing apr's libcrypt dependency this broke
+the apache build using glibc version 2.39.
+
+To fix this select the libxcrypt dependency to apr when using a glibc
+toolchain and add the dependency if selected.
+
+Fixes:
+http://autobuild.buildroot.net/results/11ccf857a70ae9f44e8d3ae39fc01db68632ca64/
+
+Signed-off-by: Bernd Kuhls <bernd@kuhls.net>
+---
+ package/apr/Config.in | 1 +
+ package/apr/apr.mk    | 4 ++++
+ 2 files changed, 5 insertions(+)
+
+diff --git a/package/apr/Config.in b/package/apr/Config.in
+index 4606fc5378..9427b7af2c 100644
+--- a/package/apr/Config.in
++++ b/package/apr/Config.in
+@@ -3,6 +3,7 @@ config BR2_PACKAGE_APR
+ 	# apr really needs shared library support
+ 	depends on !BR2_STATIC_LIBS
+ 	depends on BR2_USE_MMU # fork() in apr_proc_fork()
++	select BR2_PACKAGE_LIBXCRYPT if BR2_TOOLCHAIN_USES_GLIBC
+ 	help
+ 	  The mission of the Apache Portable Runtime (APR) project is to
+ 	  create and maintain software libraries that provide a
+diff --git a/package/apr/apr.mk b/package/apr/apr.mk
+index bdc5e915c6..cb8c12dd65 100644
+--- a/package/apr/apr.mk
++++ b/package/apr/apr.mk
+@@ -68,6 +68,10 @@ else
+ APR_CONF_OPTS += --disable-nonportable-atomics
+ endif
+ 
++ifeq ($(BR2_PACKAGE_LIBXCRYPT),y)
++APR_DEPENDENCIES += libxcrypt
++endif
++
+ ifeq ($(BR2_PACKAGE_UTIL_LINUX_LIBUUID),y)
+ APR_DEPENDENCIES += util-linux
+ endif

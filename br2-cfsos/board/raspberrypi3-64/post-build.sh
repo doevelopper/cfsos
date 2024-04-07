@@ -16,26 +16,33 @@ if [ -e ${TARGET_DIR}/etc/inittab ]; then
 tty1::respawn:/sbin/getty -L  tty1 0 vt100 # HDMI console' ${TARGET_DIR}/etc/inittab
 fi
 
+#HASSOS_NAME = "cfs-os"
+#hassos_version = "0.0.1-SNAPSHOT"
+#DATE=$(date +%y.%m.%d)
+#VARIANT=\"Prestige Edition\"
+#DEPLOYMENT="what else"
+#VARIANT_ID=xm_53h20-s_bsp
 
 # Write os-release
 # shellcheck disable=SC2153
-(
-    echo "NAME=\"${HASSOS_NAME}\""
-    echo "VERSION=\"$(hassos_version) (${BOARD_NAME})\""
-    echo "ID=${HASSOS_ID}"
-    echo "VERSION_ID=$(hassos_version)"
-    echo "PRETTY_NAME=\"${HASSOS_NAME} $(hassos_version)\""
-    echo "CPE_NAME=cpe:2.3:o:home-assistant:${HASSOS_ID}:$(hassos_version):*:${DEPLOYMENT}:*:*:*:${BOARD_ID}:*"
-    echo "HOME_URL=https://hass.io/"
-    echo "VARIANT=\"${HASSOS_NAME} ${BOARD_NAME}\""
-    echo "VARIANT_ID=${BOARD_ID}"
-    echo "SUPERVISOR_MACHINE=${SUPERVISOR_MACHINE}"
-    echo "SUPERVISOR_ARCH=${SUPERVISOR_ARCH}"
-) > "${TARGET_DIR}/usr/lib/os-release"
+#(
+#    echo "NAME=\"${HASSOS_NAME}\""
+#    echo "VERSION=\"$(hassos_version) (${BOARD_NAME})\""
+#    echo "ID=${HASSOS_ID}"
+#    echo "VERSION_ID=$(hassos_version)"
+#    echo "PRETTY_NAME=\"${HASSOS_NAME} $(hassos_version)\""
+#    echo "CPE_NAME=cpe:2.3:o:home-assistant:${HASSOS_ID}:$(hassos_version):*:${DEPLOYMENT}:*:*:*:${BOARD_ID}:*"
+#    echo "HOME_URL=https://tbd.io/"
+#    echo "VARIANT=\"${HASSOS_NAME} ${BOARD_NAME}\""
+#    echo "VARIANT_ID=${BOARD_ID}"
+#    echo "SUPERVISOR_MACHINE=${SUPERVISOR_MACHINE}"
+#    echo "SUPERVISOR_ARCH=${SUPERVISOR_ARCH}"
+#    echo "OPENIPC_VERSION=${DATE:0:1}.${DATE:1}" 
+#) > "${TARGET_DIR}/usr/lib/os-release"
 
 # Write machine-info
-(
-    echo "CHASSIS=${CHASSIS}"
-    echo "DEPLOYMENT=${DEPLOYMENT}"
-) > "${TARGET_DIR}/etc/machine-info"
+#(
+#    echo "CHASSIS=${CHASSIS}"
+#    echo "DEPLOYMENT=${DEPLOYMENT}"
+#) > "${TARGET_DIR}/etc/machine-info"
 

@@ -1,0 +1,6 @@
+config BR2_PACKAGE_4FSK
+	bool "Locking in the kernel Module"
+	depends on BR2_LINUX_KERNEL
+	help
+	  hello world kernel module
+

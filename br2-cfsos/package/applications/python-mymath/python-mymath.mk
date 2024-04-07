@@ -1,0 +1,5 @@
+PYTHON_MYMATH_SITE = $(PYTHON_MYMATH_PKGDIR)src
+PYTHON_MYMATH_SITE_METHOD = local
+PYTHON_MYMATH_SETUP_TYPE = setuptools
+
+$(eval $(python-package))

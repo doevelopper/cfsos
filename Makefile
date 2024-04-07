@@ -36,6 +36,10 @@ endef
 
 include ${MAKE_HELPERS_DIRECTORY}define.mk
 include ${MAKE_HELPERS_DIRECTORY}macros.mk
+include ${MAKE_HELPERS_DIRECTORY}ca-certificates.mk
+include ${MAKE_HELPERS_DIRECTORY}custom-packages.mk
+include ${MAKE_HELPERS_DIRECTORY}versioning.mk
+
 
 .NOTPARALLEL: $(SUPPORTED_TARGETS) $(TARGETS_CONFIG) all
 
@@ -44,6 +48,17 @@ include ${MAKE_HELPERS_DIRECTORY}macros.mk
 # # #				Buildroot RT Infrastructure setup
 # # #
 # # ####################################################################################################
+
+# ifeq ($(BRANCH), master)
+# buildroot-rescue: $(OUTPUTS) $(DLDIR) $(CCACHEDIR) bootstrap.buildroot_rescue.stamp
+# # Buildroot generates so much output drone ci can't
+# # handle it, so tell make to be quiet
+# 	$(MAKE) -s -C buildroot_rescue $(BUILDROOT_RESCUE_ARGS)
+# else
+# buildroot-rescue:
+# 	@echo "rescue is only built for master, your branch is $(BRANCH)"
+# endif
+
 
 
 $(BLRT_PACKAGE_DIR)/buildroot-$(BLRT_VERSION).tar.gz.sign:
@@ -191,7 +206,7 @@ $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-savedefconfig): %-savedefc
 	$(Q)$(call MESSAGE,"BLRT [Saving $*] default config")
 	$(Q)$(MAKE) $(BLRT_MAKEARGS) BR2_CCACHE_DIR=$(BLRT_PACKAGE_DIR)/cache/cc/$* O=$(BLRT_OOSB)/$*-build-artifacts savedefconfig BR2_DEFCONFIG=$(DEFCONFIG_DIR_FULL)/$*_defconfig
 
-$(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-release): %-release: %-integration-test
+$(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-artifacts-release): %-artifacts-release: %-integration-test
 	$(Q)$(call MESSAGE,"[  Packaging $* board's artefacts]")
 
 # ##################################################################################################################################
@@ -216,27 +231,13 @@ $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-realclean): %-realclean:
 	$(Q)rm -fr $(BLRT_OOSB)/$*-build-artifacts
 	$(Q)rm -f br.log
 
-$(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-package-clean): %-package-clean:
-	$(Q)$(call MESSAGE,"[ Package clean $(BLRT_OOSB)/$*-build-artifacts]")
-	$(if $(V), @echo " RM        $($(BLRT_OOSB)/$*-build-artifacts)/*.o")
-	$(Q)find $($(BLRT_OOSB)/$*-build-artifacts) -type f -name "*.o" -exec rm -rf {} +
-	$(if $(V), @echo " RM        $($(BLRT_OOSB)/$*-build-artifacts)/*.a")
-	$(Q)find $($(BLRT_OOSB)/$*-build-artifacts) -type f -name "*.a" -exec rm -rf {} +
-	$(if $(V), @echo " RM        $($(BLRT_OOSB)/$*-build-artifacts)/*.elf")
-	$(Q)find $($(BLRT_OOSB)/$*-build-artifacts) -type f -name "*.elf" -exec rm -rf {} +
-	$(if $(V), @echo " RM        $(build_d$(BLRT_OOSB)/$*-build-artifactsir)/*.bin")
-	$(Q)find $($(BLRT_OOSB)/$*-build-artifacts) -type f -name "*.bin" -exec rm -rf {} +
-	$(if $(V), @echo " RM        $($(BLRT_OOSB)/$*-build-artifacts)/*.dtb")
-	$(Q)find $($(BLRT_OOSB)/$*-build-artifacts) -type f -name "*.dtb" -exec rm -rf {} +
-
-
 # # ##################################################################################################################################
 # # #
 # # #                                     Artifact upload to targets
 # # #
 # # ##################################################################################################################################
 
-$(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)--upload): %-upload:
+$(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-upload): %-upload:
 	$(Q)$(call MESSAGE,"[ Uploading $* s artifacts")
 # @if grep -q 'BR2_PACKAGE_SWUPDATE=y' $(BLRT_OOSB)/$*-build-artifacts/.config; then \
 #     echo "--- (swupdate) $* ---" ; \
@@ -245,33 +246,30 @@ $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)--upload): %-upload:
 # fi
 
 $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-upgrade): %-upgrade:
-	$(Q)$(MAKE) $(BLRT_MAKEARGS) BR2_CCACHE_DIR=$(BLRT_PACKAGE_DIR)/cache/cc/$* O=$(BLRT_OOSB)/$*-build-artifacts $(subst $*-,,$@)
+	$(Q)$(call MESSAGE,"[ Upgrade $* ]")
+	$(Q)echo $(MAKE) $(BLRT_MAKEARGS) BR2_CCACHE_DIR=$(BLRT_PACKAGE_DIR)/cache/cc/$* O=$(BLRT_OOSB)/$*-build-artifacts $(subst $*-,,$@)
 
 
 
 $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-checksum): %-checksum:
-	$(Q)$(call MESSAGE,"[ Generating $* artifacts checksum]")
+	$(Q)$(call MESSAGE,"[ Generating $* artifacts checksum, signatures...]")
+	$(Q)rm -f $(BLRT_OOSB)/$*-build-artifacts/images/*.{sha256,asc,tar.gz,tar.bz2,zip,tar.xz}
+	$(Q)for file in $(BLRT_OOSB)/$*-build-artifacts/images/*; do \
+		echo "Processing $$file..."; \
+		sha256sum $$file > $$file.sha256; \
+		done
 
+	$(Q)for ext in gz bz2 zip xz; do \
+			tar -cavf $(BLRT_OOSB)/$*-build-artifacts/images/$*.tar.$$ext -C $(BLRT_OOSB)/$*-build-artifacts/images/ rootfs.ext2 Image; \
+			gpg --detach-sign --armor $(BLRT_OOSB)/$*-build-artifacts/images/$*.tar.$$ext; \
+		done
+# TODO  leverage this commands gpg --passphrase-file /path/to/passphrase.txt --detach-sign --armor ...
 
 $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-regenerate): %-regenerate:
 	$(Q)$(call MESSAGE,"[ Clean for regenerating $*  a new]")
 	$(Q)rm -rf $(BLRT_OOSB)/$*-build-artifacts/target
 	$(Q)find $(BLRT_OOSB)/$*-build-artifacts/ -name ".stamp_target_installed" -delete
 #	$(Q)rm -f =$(BLRT_OOSB)/$*-build-artifacts/build/host-gcc-final-*/.stamp_host_installed
-
-
-$(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-certificate): %-certificate:  # Generqte qrious certificates
-	$(Q)$(call MESSAGE,"[ $*'s various certificates generation a new]")
-
-# @if grep -q 'BR2_PACKAGE_LIBOPENSSL_BIN=y' $(BLRT_OOSB)/$*-build-artifacts/.config; 	\
-# then 																					\
-# 	echo "--- Certificates $* generation---" ;  										\
-# 	mkdir -pv $(CERTS_DIR)/openssl-ca/{root,private,certs}           					\
-# 	touch "$(CERTS_DIR)/openssl-ca/index.txt" 											\
-# 	test -f $(CERTS_DIR)/openssl-ca/serial || echo 00 > $(CERTS_DIR)/openssl-ca/serial 	\
-# else 																					\
-# 	echo "--- (SKIP cert generatrion) $* ---" ; 										\
-# fi \
 
 
 
@@ -281,61 +279,12 @@ $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-certificate): %-certificat
 # 	@(cd $(O)/staging/ && gdb-multiarch)
 
 
-# echo "--- Generation $* ca.key---" ;  \
-# openssl genrsa -out $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-ca.key 4096 \
-# echo "--- Generation $* ca.csr---" ;  \
-# openssl req -sha256 -key $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-ca.key -days 365 -new -out $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-ca.csr -config $(CERTS_DIR)/openssl-ca/demo-openssl.cnf -extensions v3_ca -subj "/C=US/ST=Maryland/O=ACME Systems Technologies/CN=Sample CA" \
-# echo "--- Generation $* ca.crt---" ;  \
-# openssl x509 -sha256 -req -in $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-ca.csr -signkey $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-ca.key -out $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-ca.crt -extfile $(CERTS_DIR)/openssl-ca/demo-openssl.cnf -extensions v3_ca -days 365 \
-# echo "--- Generation $* server.key---" ;  \
-# openssl genrsa -out $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-server.key 2048 \
-# echo "--- Generation $* server.csr---" ;  \
-# openssl req -sha256 -key $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-server.key -days 365 -new -out $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-server.csr -config $(CERTS_DIR)/openssl-ca/demo-openssl.cnf -subj "/C=US/ST=Maryland/O=ACME Systems Technologies/CN=test-server" \
-# echo "--- Generation $* server.crt---" ;  \
-# openssl ca -batch -config $(CERTS_DIR)/openssl-ca/demo-openssl.cnf -in $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-server.csr -out $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-server.crt -outdir . -keyfile $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-ca.key -cert $(CERTS_DIR)/openssl-ca/$(subst $*-,,$@)-ca.crt -days 120 \
-
-# 	@if grep -q 'BR2_TARGET_UBOOT=y' $(BLRT_OOSB)/$*-build-artifacts/.config; then
-# 		$(Q)$(call MESSAGE,"[ Generating $* Rauc  certificate]")
-# # This is a Test Ceritificate Authority, only to be used for testing.
-# # $(Q)$(call MESSAGE,"[ Generating $* Swupdate certificate]")
-# # $(Q)$(call MESSAGE,"[ Generating $* Webs certificate]")
-# # $(Q)$(call MESSAGE,"[ Generating $* Tee certificate]")
-# 	else 
-# 		$(Q)$(call MESSAGE,"[ --- (UBOOT not activated SKIPPING $@ ---]")
-# 	fi
-
 # # # ####################################################################################################
 # # # #
 # # # #								Hidden goals declaration
 # # # #
 # # # ####################################################################################################
 
-# init: .stamp_init
-# 	$(Q)$(call MESSAGE,"[  === $@ ===" ]")
-
-# .stamp_init: .stamp_os $(foreach defconfig,$(SUPPORTED_TARGETS),.stamp_init_$(defconfig))
-# 	$(Q)$(call MESSAGE,"[  === $@ ===" ]")
-
-# .stamp_os: .stamp_os_depends $(foreach defconfig,$(SUPPORTED_TARGETS),.stamp_os_$(defconfig))
-# 	$(Q)$(call MESSAGE,"[  === $@ ===" ]")
-
-# .stamp_os_depends: .stamp_toolchain $(foreach defconfig,$(SUPPORTED_TARGETS),.stamp_os_depends_$(defconfig))
-# 	$(Q)$(call MESSAGE,"[  === $@ ===" ]")
-
-# .stamp_toolchain: .stamp_source $(foreach defconfig,$(SUPPORTED_TARGETS),.stamp_toolchain_$(defconfig))
-# 	$(Q)$(call MESSAGE,"[  === $@ ===" ]")
-
-# .stamp_source: .stamp_config $(foreach defconfig,$(SUPPORTED_TARGETS),.stamp_source_$(defconfig))
-# 	$(Q)$(call MESSAGE,"[  === $@ ===" ]")
-
-# .stamp_config: .stamp_submodules $(foreach defconfig,$(SUPPORTED_TARGETS),.stamp_config_$(defconfig))
-# 	$(Q)$(call MESSAGE,"[  === $@ ===" ]")
-
-# .stamp_submodules:
-# 	$(Q)$(call MESSAGE,"[  === $@ ===" ]")
-# #	$(Q)git submodule init
-# #	$(Q)git submodule update --recursive
-# #	$(Q)touch $@
 
 # OPTEE_BASE=$(pwd)
 # export PATH=${OPTEE_BASE}/buildroot/output/host/bin:${OPTEE_BASE}/myrootfs/usr/include:${OPTEE_BASE}/myrootfs/usr/lib:$PATH

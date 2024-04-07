@@ -1,0 +1,24 @@
+##############################################
+#
+# Hello world
+#
+##############################################
+
+HELLOWORLD_VERSION = 1.0
+HELLOWORLD_SITE = $(BR2_EXTERNAL_CFSOS_PATH)/package/drivers/kernel-space/helloworld/src
+HELLOWORLD_SITE_METHOD = local
+
+define HELLOWORLD_BUILD_CMDS
+	$(MAKE) $(LINUX_MAKE_FLAGS) -C $(LINUX_DIR) M=$(@D) modules
+endef
+
+define HELLOWORLD_INSTALL_TARGET_CMDS
+	$(MAKE) $(LINUX_MAKE_FLAGS) -C $(LINUX_DIR) M=$(@D) modules_install
+endef
+
+define HELLOWORLD_LINUX_CONFIG_FIXUPS
+	$(call KCONFIG_ENABLE_OPT,CONFIG_MODULE_UNLOAD)
+endef
+
+$(eval $(kernel-module))
+$(eval $(generic-package))

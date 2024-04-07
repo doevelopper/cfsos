@@ -1,0 +1,6 @@
+config BR2_PACKAGE_4FSK_APP
+	bool "4FSK app"
+	depends on BR2_LINUX_KERNEL
+	help
+	  4 FSK Application
+

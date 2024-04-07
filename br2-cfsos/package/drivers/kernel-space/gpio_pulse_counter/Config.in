@@ -1,0 +1,6 @@
+config BR2_PACKAGE_GPIO_PULSE_COUNTER
+	bool " Gpio Pulse Counter"
+	depends on BR2_LINUX_KERNEL
+	help
+	  hello world kernel module
+

@@ -50,7 +50,7 @@ print-help-run           =  printf "      %-30s - %s\\n" "$1" "$2"
 print-help               =  $(Q)$(call print-help-run,$1,$2)
 
 BLRT_LATEST              := https://github.com/buildroot/buildroot.git
-BLRT_VERSION             =  2024.02
+BLRT_VERSION             =  2024.02.1
 BLRT_EXT                 =  br2-cfsos
 # BLRT_EXT                 +=  br2-cfsos-closed-sources
 DEFCONFIG_DIR            =  $(BLRT_EXT)/configs
@@ -63,49 +63,57 @@ VERSION_DATE             := $(shell date --utc +'%Y%m%d')
 VERSION_DEV              := dev$(VERSION_DATE)
 TOP_DIR                  := $(shell readlink -f .)
 USER                     := $(or $(UNIX_USER),ubuntu)
-UID                      := $(or $(UNIX_UID),1000)
+UID                      := $(or $(UNIX_UID),$(shell id -u))
+GID                      := $(or $(UNIX_GID),$(shell id -g))
 OS                       := $(shell sed -ne "/CODENAME/s/[^=]*=//gp" /etc/lsb-release)
 
 ifeq ($(PARALLEL_JOBS),)
-    PARALLEL_JOBS := $(shell echo $$((1 + `nproc 2>/dev/null || echo 0`)))
+    PARALLEL_JOBS        := $(shell echo $$((1 + `nproc 2>/dev/null || echo 0`)))
 else ifeq ($(PARALLEL_JOBS),0)
-    PARALLEL_JOBS := $(shell echo $$((1 + `nproc 2>/dev/null || echo 0`)))
+    PARALLEL_JOBS        := $(shell echo $$((1 + `nproc 2>/dev/null || echo 0`)))
 endif
 
-PARALLEL_OPTS = -j$(PARALLEL_JOBS) PARALLEL_JOBS=$(PARALLEL_JOBS)
+PARALLEL_OPTS             = -j$(PARALLEL_JOBS) PARALLEL_JOBS=$(PARALLEL_JOBS)
 ifneq ($(PARALLEL_JOBS),1)
-    PARALLEL_OPTS += -Orecurse
+    PARALLEL_OPTS        += -Orecurse
 endif
 
 
 SUPPORTED_TARGETS        :=  $(sort $(notdir $(patsubst %_defconfig,%,$(wildcard $(DEFCONFIG_DIR)/*_defconfig))))
 
-CFSOS_GOALD              :=                                                                               \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-configure)              \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-compile)                \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-unit-test)              \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-certificate)            \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-integration-test)       \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-release)                \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-menuconfig)             \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-linux-menuconfig)       \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-linux-rebuild)          \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-uboot-menuconfig)       \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-uboot-rebuild)          \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-busybox-menuconfig)     \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-busybox-rebuild)        \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-savedefconfig)          \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-clean)                  \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-distclean)              \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-package-clean)          \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-realclean)              \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-upload)                 \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-upgrade)                \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-checksum)               \
-                            $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-regenerate)             \
-                            # optee-os $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-optee-os)    \
-
-
+# CFSOS_GOALD              :=                                                                               \
+#                             $(foreach defconfig,$(SUPPORTED_TARGETS),                                     \
+#                                 $(addprefix $(defconfig)-,                                                \
+#                                     artifacts-release                                                     \
+#                                     busybox-menuconfig                                                    \
+#                                     busybox-rebuild                                                       \
+#                                     bump-major                                                            \
+#                                     bump-minor                                                            \
+#                                     bump-patch                                                            \
+#                                     busybox-rebuild                                                       \
+#                                     certificate                                                           \
+#                                     checksum                                                              \
+#                                     clean                                                                 \
+#                                     compile                                                               \
+#                                     configure                                                             \
+#                                     distclean                                                             \
+#                                     integration-test                                                      \
+#                                     linux-menuconfig                                                      \
+#                                     linux-rebuild                                                         \
+#                                     menuconfig                                                            \
+#                                     package-clean                                                         \
+#                                     realclean                                                             \
+#                                     regenerate                                                            \
+#                                     release                                                               \
+#                                     savedefconfig                                                         \
+#                                     uboot-menuconfig                                                      \
+#                                     uboot-rebuild                                                         \
+#                                     unit-test                                                             \
+#                                     upgrade                                                               \
+#                                     upload                                                                \
+#                                     web-self-signed                                                       \
+#                                 )                                                                         \
+#                             )
 ## out of source build
 BLRT_OOSB                =   $(PWD)/workspace
 BLRT_ARTIFACTS_DIR       =   $(BLRT_OOSB)/artifacts
