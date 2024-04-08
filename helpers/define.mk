@@ -34,7 +34,10 @@ XMLTO                    := xmlto
 XMLTO_FLAGS              =  -o $(OUTPUT_DIR) $(XML_VERBOSE)
 BISON                    := $(shell which bison || type -p bison)
 UNZIP                    := $(shell which unzip || type -p unzip) -q
-
+DOT                      := .
+DASH                     := -
+TILDE                    := ~
+UNDERS                   := _
 # Check if verbosity is ON for build process
 CMD_PREFIX_DEFAULT       := @
 NPD                      ?= --no-print-directory
@@ -56,6 +59,7 @@ BLRT_EXT                 =  br2-cfsos
 DEFCONFIG_DIR            =  $(BLRT_EXT)/configs
 DEFCONFIG_DIR_FULL       =  $(PWD)/$(BLRT_EXT)/configs
 CERTS_DIR                =  $(PWD)/$(BLRT_EXT)/board/common/certs
+BOARD_DIR                =  $(PWD)/$(BLRT_EXT)/board
 OPENSSL_CONF             = "$(CERTS_DIR)/openssl.cnf"
 DATE                     := $(shell date +%Y.%m.%d-%H%M%S --utc)
 HOSTNAME                 := "fundationos"

@@ -21,20 +21,25 @@ RAUC_CN 	:= $(or $(RAUC_CN),"Taz")
 $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-web-self-signed): %-web-self-signed: ##.root-ssl .server-ssl .client-ssl
 	$(Q)$(call MESSAGE,"    [Rebuild $* self-signed root/server/client certs/keys in a consistent way.]")
 
-	$(Q)$(call MESSAGE,"    [Regenerating $* Root CA.]")
-	$(Q)echo $(BLRT_OOSB)/$*-build-artifacts/host/bin/openssl req -new -sha256 -nodes -newkey rsa:2048 -config  $(BLRT_EXT)/board/$*/certs/root.cnf -keyout /tmp/root.key -out /tmp/root.csr
-	$(Q)echo $(BLRT_OOSB)/$*-build-artifacts/host/bin/openssl x509 -req -days 3653 -sha256 -in /tmp/root.csr -extfile $(BLRT_OOSB)/$*-build-artifacts/target/etc/ssl/openssl.cnf -extensions v3_ca -signkey /tmp/root.key -out $(BLRT_EXT)/board/$*/certs/root.crt
-#/etc/ssl/openssl.cnf# host/etc/ssl/openssl.cnf
+	$(Q)rm -vf $(BLRT_EXT)/board/$(subst $(UNDERS),$(DASH),$*)/certs/{*.crt,*.key,*.srl}
 
-	$(Q)$(call MESSAGE,"    [Regenerating $* Server Certs.]")
-	$(Q)echo $(BLRT_OOSB)/$*-build-artifacts/host/bin/openssl req -new -sha256 -nodes -newkey rsa:2048 -config $(BLRT_EXT)/board/$*/certs/server.cnf -keyout $(BLRT_EXT)/board/$*/certs/server.key -out /tmp/server.csr
-	$(Q)echo $(BLRT_OOSB)/$*-build-artifacts/host/bin/openssl x509 -req -days 3653 -sha256 -extfile $(BLRT_EXT)/board/$*/certs/server.cnf -extensions req_ext -CA $(BLRT_EXT)/board/$*/certs/root.crt -CAkey /tmp/root.key -CAcreateserial -in /tmp/server.csr -out $(BLRT_EXT)/board/$*/certs/server.crt
+# 	$(Q)$(call MESSAGE,"    [Regenerating $* Root CA.]")
+# 	$(Q)$(BLRT_OOSB)/$*-build-artifacts/host/bin/openssl req -new -sha256 -nodes -newkey rsa:2048 -config  $(BLRT_EXT)/board/$(subst $(UNDERS),$(DASH),$*)/certs/root.cnf -keyout /tmp/root.key -out /tmp/root.csr
+# 	$(Q)$(BLRT_OOSB)/$*-build-artifacts/host/bin/openssl x509 -req -days 3653 -sha256 -in /tmp/root.csr -extfile $(BLRT_OOSB)/$*-build-artifacts/target/etc/ssl/openssl.cnf -extensions v3_ca -signkey /tmp/root.key -out $(BLRT_EXT)/board/$(subst $(UNDERS),$(DASH),$*)/certs/root.crt
+# # #/etc/ssl/openssl.cnf# host/etc/ssl/openssl.cnf
+
+# 	$(Q)$(call MESSAGE,"    [Regenerating $* Server Certs.]")
+# 	$(Q)$(BLRT_OOSB)/$*-build-artifacts/host/bin/openssl req -new -sha256 -nodes -newkey rsa:2048 -config $(BLRT_EXT)/board/$(subst $(UNDERS),$(DASH),$*)/certs/server.cnf -keyout $(BLRT_EXT)/board/$(subst $(UNDERS),$(DASH),$*)/certs/server.key -out /tmp/server.csr
+# 	$(Q)$(BLRT_OOSB)/$*-build-artifacts/host/bin/openssl x509 -req -days 3653 -sha256 -extfile $(BLRT_EXT)/board/$(subst $(UNDERS),$(DASH),$*)/certs/server.cnf -extensions req_ext -CA $(BLRT_EXT)/board/$(subst $(UNDERS),$(DASH),$*)/certs/root.crt -CAkey /tmp/root.key -CAcreateserial -in /tmp/server.csr -out $(BLRT_EXT)/board/$(subst $(UNDERS),$(DASH),$*)/certs/server.crt
+
+# 	$(Q)$(call MESSAGE,"    [Regenerating $* Client Certs.]")
+# 	$(Q)$(BLRT_OOSB)/$*-build-artifacts/host/bin/openssl req -new -sha256 -nodes -newkey rsa:2048 -config $(BLRT_EXT)/board/$(subst $(UNDERS),$(DASH),$*)/certs/clients.cnf  -keyout $(BLRT_EXT)/board/$(subst $(UNDERS),$(DASH),$*)/certs/clients.key -out /tmp/clients.csr
+# 	$(Q)$(BLRT_OOSB)/$*-build-artifacts/host/bin/openssl x509 -req -days 3653 -sha256 -CA $(BLRT_EXT)/board/$(subst $(UNDERS),$(DASH),$*)/certs/root.crt -CAkey /tmp/root.key -CAcreateserial -in /tmp/clients.csr -out $(BLRT_EXT)/board/$(subst $(UNDERS),$(DASH),$*)/certs/clients.crt
 
 
-	$(Q)$(call MESSAGE,"    [Regenerating $* Client Certs.]")
-	$(Q)echo $(BLRT_OOSB)/$*-build-artifacts/host/bin/openssl req -new -sha256 -nodes -newkey rsa:2048 -config $(BLRT_EXT)/board/$*/certs/clients.cnf  -keyout $(BLRT_EXT)/board/$*/certs/clients.key -out /tmp/clients.csr
-	$(Q)echo $(BLRT_OOSB)/$*-build-artifacts/host/bin/openssl x509 -req -days 3653 -sha256 -CA $(BLRT_EXT)/board/$*/certs/root.crt -CAkey /tmp/root.key -CAcreateserial -in /tmp/clients.csr -out $(BLRT_EXT)/board/$*/certs/clients.crt
-	$(Q)$(foreach h,$(wildcard $(BLRT_EXT)/board/$*/certs/*.pem), echo -e "\n\n$(h)\n"; $(BLRT_OOSB)/$*-build-artifacts/host/bin/openssl x509 -noout -in $(h) -dates;)
+$(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-certificate-expiry): %-certificate-expiry:  # Generate various certificates
+	$(Q)$(call MESSAGE,"    [Check $* certificates expiry dates.]")
+	$(Q)$(foreach h,$(wildcard $(BLRT_EXT)/board/$(subst $(UNDERS),$(DASH),$*)/certs/*.crt), echo -e "\n\n$(h)\n"; $(BLRT_OOSB)/$*-build-artifacts/host/bin/openssl x509 -noout -in $(h) -dates;)
 
 
 $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-certificate): %-certificate:  # Generate various certificates
