@@ -48,6 +48,9 @@ NEW_MAJOR_VERSION 					?= $(shell expr $(HPS_MAJOR_TAG) + 1)
 NEW_MINOR_VERSION 					?= $(shell expr $(HPS_MINOR_TAG) + 1)
 NEW_PATCH_VERSION 					?= $(shell expr $(HPS_PATCH_TAG) + 1)
 
+# LAST_TAG=$(git describe --abbrev=0 --exclude='*-rc*')
+# COMMITS=$(git rev-list --count "$(git describe --abbrev=0 --exclude='*-rc*')..HEAD")
+# REVISION=$(git rev-parse --short=8 HEAD || echo unknown)
 
 define do_release
 $(Q)echo "git checkout -b release/${1} develop"

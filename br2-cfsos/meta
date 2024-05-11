@@ -1,0 +1,8 @@
+VERSION_MAJOR="12"
+VERSION_MINOR="3"
+VERSION_SUFFIX="dev0"
+
+HASSOS_NAME="Home Assistant OS"
+HASSOS_ID="haos"
+
+DEPLOYMENT="development"
