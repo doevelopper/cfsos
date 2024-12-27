@@ -53,7 +53,7 @@ print-help-run           =  printf "      %-30s - %s\\n" "$1" "$2"
 print-help               =  $(Q)$(call print-help-run,$1,$2)
 
 BLRT_LATEST              := https://github.com/buildroot/buildroot.git
-BLRT_VERSION             =  2024.02.1
+BLRT_VERSION             =  2024.02.2
 BLRT_EXT                 =  br2-cfsos
 # BLRT_EXT                 +=  br2-cfsos-closed-sources
 DEFCONFIG_DIR            =  $(BLRT_EXT)/configs

@@ -14,6 +14,11 @@ OUTPUT_DIR=certs
 OPENSSL_CNF=openssl.cnf
 DIR=./$(CERTS_DIR)/demoCA
 
+ROOT_CA_PASSWORD=ssl_ca_pwd
+PK8_PASSWORD=sslpwd
+P12_PASSWORD=sslpwd
+SERVER_CRT_DIR=server/
+
 RAUC_ORG 	:= $(if $(RAUC_ORG),$(RAUC_ORG),$("ACME Systems Inc."))
 RAUC_CA 	:= $(or $(RAUC_CA),"RAUC CA")
 RAUC_CN 	:= $(or $(RAUC_CN),"Taz")
@@ -44,6 +49,8 @@ $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-certificate-expiry): %-cer
 
 $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-certificate): %-certificate:  # Generate various certificates
 	$(Q)$(call MESSAGE,"[ $*'s certificates generation a new]")
+
+
 
 # @if grep -q 'BR2_PACKAGE_LIBOPENSSL_BIN=y' $(BLRT_OOSB)/$*-build-artifacts/.config; 	\
 # then 																					\
