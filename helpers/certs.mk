@@ -1,0 +1,170 @@
+
+#------------------------------------------------------------------------
+# variables: root CA
+ROOTCA_DAYS 			?= 3650
+ROOTCA_KEYSZ 			?= 4096
+ROOTCA_ORG 				?= Istio
+ROOTCA_CN 				?= Root CA
+KUBECONFIG 				?= $(HOME)/.kube/config
+ISTIO_NAMESPACE 		?= istio-system
+# Additional variables are defined in root-ca.conf target below.
+
+#------------------------------------------------------------------------
+# variables: intermediate CA
+INTERMEDIATE_DAYS 		?= 730
+INTERMEDIATE_KEYSZ 		?= 4096
+INTERMEDIATE_ORG 		?= Istio
+INTERMEDIATE_CN 		?= Intermediate CA
+INTERMEDIATE_SAN_DNS 	?= istiod.istio-system.svc
+# Additional variables are defined in %/intermediate.conf target below.
+
+#------------------------------------------------------------------------
+# variables: workload certs: eg VM
+WORKLOAD_DAYS 			?= 1
+SERVICE_ACCOUNT 		?= default
+WORKLOAD_CN 			?= Workload
+
+#------------------------------------------------------------------------
+# variables: files to clean
+FILES_TO_CLEAN+			=k8s-root-cert.pem \
+                 		k8s-root-cert.srl  \
+                 		k8s-root-key.pem root-ca.conf root-cert.csr root-cert.pem root-cert.srl root-key.pem
+#------------------------------------------------------------------------
+# clean
+.PHONY: clean-certs
+
+
+
+
+clean-certs: ## Cleans all the intermediate files and folders previously generated.
+	@rm -f $(FILES_TO_CLEAN)
+
+
+
+
+# inherited
+VERSION?=	unknown
+OPENSSL?=	openssl
+MKDIR?=		mkdir
+
+# OpenSSL settings
+CA_SUBJECT?=	'/C=CH/O=SSLsplit Root CA/CN=SSLsplit Root CA/'
+CA_DAYS?=	3650
+CA_EXT:=	v3_ca
+CRT_SUBJECT?=	'/C=CH/O=SSLsplit Test Certificate/CN=daniel.roe.ch/'
+CRT_DAYS?=	365
+CRT_EXT:=	v3_crt
+CONFIG:=	x509v3ca.cnf
+PASSWORD:=	test
+DIGEST:=	-$(shell echo test | openssl dgst -sha256 2>/dev/null | grep -q f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2 && echo sha256 || echo sha1)
+
+all: rsa dsa ec targets server pwd
+
+testreqs: rsa targets server
+
+session: session.pem
+
+dh: dh512.param dh1024.param dh2048.param dh4096.param
+
+rsa: rsa.pem
+
+pwd: pwd.key
+
+dsa: dsa.pem
+
+ec: ec.pem
+
+server: server.pem
+
+dh512.param:
+	$(OPENSSL) dhparam -out $@ -2 512
+
+dh1024.param:
+	$(OPENSSL) dhparam -out $@ -2 1024
+
+dh2048.param:
+	$(OPENSSL) dhparam -out $@ -2 2048
+
+dh4096.param:
+	$(OPENSSL) dhparam -out $@ -2 4096
+
+dsa.param:
+	$(OPENSSL) dsaparam -out $@ 1024
+
+dsa.key: dsa.param
+	$(OPENSSL) gendsa -out $@ $<
+
+rsa.key:
+	$(OPENSSL) genrsa -out $@ 2048
+
+pwd.key: rsa.key
+	echo $(PASSWORD) | $(OPENSSL) rsa -in $< -out $@ -aes128 -passout stdin
+
+ec.key:
+	$(OPENSSL) ecparam -out $@ -name prime192v1 -genkey
+
+%.crt: %.key $(CONFIG)
+	$(OPENSSL) req -new -nodes -x509 $(DIGEST) -out $@ -key $< \
+		-config $(CONFIG) -extensions $(CA_EXT) \
+		-subj $(CA_SUBJECT) \
+		-set_serial 0 -days $(CA_DAYS)
+
+server.key:
+	$(OPENSSL) genrsa -out $@ 2048
+
+server.crt: server.key $(CONFIG)
+	$(OPENSSL) req -new -nodes -x509 $(DIGEST) -out $@ -key $< \
+		-config $(CONFIG) -extensions $(CRT_EXT) \
+		-subj $(CRT_SUBJECT) \
+		-set_serial 42 -days $(CRT_DAYS)
+
+%.pem: %.crt %.key
+	cat $^ >$@
+
+targets: targets/daniel.roe.ch.pem targets/wildcard.roe.ch.pem
+	$(RM) rsa.srl
+
+targets/daniel.roe.ch.pem: rsa.crt
+	$(MKDIR) -p targets
+	$(OPENSSL) genrsa -out targets/daniel.roe.ch.key 2048
+	$(OPENSSL) req -new $(DIGEST) -subj '/C=CH/CN=daniel.roe.ch/' \
+		-key targets/daniel.roe.ch.key \
+		-out targets/daniel.roe.ch.csr
+	$(OPENSSL) x509 -req $(DIGEST) -CAcreateserial -days 365 \
+		-CA rsa.crt -CAkey rsa.key \
+		-in targets/daniel.roe.ch.csr \
+		-out targets/daniel.roe.ch.crt
+	cat targets/daniel.roe.ch.crt targets/daniel.roe.ch.key rsa.crt \
+		>targets/daniel.roe.ch.pem
+	$(RM) targets/daniel.roe.ch.key targets/daniel.roe.ch.csr \
+		targets/daniel.roe.ch.crt
+
+targets/wildcard.roe.ch.pem: rsa.crt
+	$(MKDIR) -p targets
+	$(OPENSSL) genrsa -out targets/wildcard.roe.ch.key 2048
+	$(OPENSSL) req -new $(DIGEST) -subj '/C=CH/CN=*.roe.ch/' \
+		-key targets/wildcard.roe.ch.key \
+		-out targets/wildcard.roe.ch.csr
+	$(OPENSSL) x509 -req $(DIGEST) -CAcreateserial -days 365 \
+		-CA rsa.crt -CAkey rsa.key \
+		-in targets/wildcard.roe.ch.csr \
+		-out targets/wildcard.roe.ch.crt
+	cat targets/wildcard.roe.ch.crt targets/wildcard.roe.ch.key rsa.crt \
+		>targets/wildcard.roe.ch.pem
+	$(RM) targets/wildcard.roe.ch.key targets/wildcard.roe.ch.csr \
+		targets/wildcard.roe.ch.crt
+
+# localhost network connectivity is required
+session.pem:
+	openssl s_server -accept 46143 -cert server.pem -quiet -no_ssl2 & \
+		pid=$$! ; \
+		sleep 1 ; \
+		echo q | $(OPENSSL) s_client -connect localhost:46143 \
+			-quiet -no_ign_eof -sess_out $@ ; \
+		kill $$pid
+	test -r $@
+
+clean:
+	rm -rf rsa.* dsa.* ec.* dh*.param targets *.srl session.pem server.*
+
+.PHONY: all clean rsa dsa ec dh session targets

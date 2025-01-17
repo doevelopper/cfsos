@@ -1,0 +1,50 @@
+name: _Parameters
+
+on:
+  workflow_call:
+    outputs:
+      matrix:
+        value: ${{ jobs.set-up-parameters.outputs.matrix }}
+      hostname:
+        value: ${{ jobs.set-up-parameters.outputs.hostname }}
+      version:
+        value: ${{ jobs.set-up-parameters.outputs.version }}
+      version-dev:
+        value: ${{ jobs.set-up-parameters.outputs.version-dev }}
+      release:
+        value: ${{ jobs.set-up-parameters.outputs.release }}
+      os-id:
+        value: ${{ jobs.set-up-parameters.outputs.os-id }}
+
+jobs:
+  set-up-parameters:
+    name: Set up parameters
+    runs-on: ubuntu-latest
+
+    outputs:
+      matrix: ${{ steps.generate-matrix.outputs.result }}
+      hostname: ${{ steps.params.outputs.hostname }}
+      version: ${{ steps.params.outputs.version }}
+      version-dev: ${{ steps.params.outputs.version-dev }}
+      release: ${{ steps.params.outputs.release }}
+      os-id: ${{ steps.params.outputs.os-id }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Generate 'params'
+        id: params
+        shell: bash
+        run: |
+          ./.github/scripts/generate-params.sh
+
+      - name: Create build matrix
+        uses: actions/github-script@v7
+        id: generate-matrix
+        with:
+          script: |
+            const boards = require("./.github/workflows/matrix.json")
+            return { "board": boards }

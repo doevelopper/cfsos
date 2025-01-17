@@ -1,0 +1,83 @@
+name: _Build
+
+on:
+  workflow_call:
+    secrets:
+      RAUC_CERTIFICATE:
+        required: True
+      RAUC_PRIVATE_KEY:
+        required: True
+    inputs:
+      matrix:
+        required: True
+        type: string
+      hostname:
+        required: True
+        type: string
+      version:
+        required: True
+        type: string
+      version-dev:
+        required: True
+        type: string
+      os-id:
+        required: True
+        type: string
+
+jobs:
+  build-buildroot-image:
+    name: Build image for ${{ matrix.board.id }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix: ${{ fromJson(inputs.matrix) }}
+
+    steps:
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 512
+          swap-size-mb: 1024
+          remove-dotnet: 'true'
+
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          submodules: True
+
+      - name: Initialization environment
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo apt install wget git bc binutils bison linux-headers-$(uname -r) xz-utils
+          sudo timedatectl set-timezone "Europe/Vienna"
+
+      - name: Add RAUC release PKI certs
+        run: |
+          echo "${{ secrets.RAUC_CERTIFICATE }}" > buildroot-external/cert.pem
+          echo "${{ secrets.RAUC_PRIVATE_KEY }}" > buildroot-external/key.pem
+
+      - name: Free space
+        run: |
+          df -h
+
+      - name: Build image
+        run: |
+          make \
+            BUILDDIR=${GITHUB_WORKSPACE} \
+            HOSTNAME=${{ inputs.hostname }} \
+            VERSION_DEV=${{ inputs.version-dev }} ${{ matrix.board.defconfig }}
+
+      - name: Upload image
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.os-id }}-${{ matrix.board.id }}-${{ inputs.version }}.img.xz
+          path: release/${{ inputs.os-id }}-${{ matrix.board.id }}-${{ inputs.version }}.img.xz
+          if-no-files-found: error
+
+      - name: Upload RAUC bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.os-id }}-${{ matrix.board.id }}-${{ inputs.version }}.raucb
+          path: release/${{ inputs.os-id }}-${{ matrix.board.id }}-${{ inputs.version }}.raucb
+          if-no-files-found: error

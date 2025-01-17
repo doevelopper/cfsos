@@ -1,0 +1,22 @@
+name: _Validate
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: True
+        type: string
+
+jobs:
+  validate-version:
+    name: Validate version
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check tag ${{ github.ref_name }}
+        shell: bash
+        run: |
+          ./.github/scripts/check-tag.sh "${{ inputs.version }}"
