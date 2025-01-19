@@ -1,1 +1,8 @@
-unipi 1000 unipi 1000 =unipi /home/unipi /bin/zsh wheel
+# uname         UID         gname           GID         pw              homedir                 shell           groups
+unipi           1006        unipi           1006        =unipi          /home/unipi             /bin/zsh        wheel
+horus           1000        admin           1000        =happyman       /home/horus             /bin/dash       sudo,wheel                    Interactive Administration
+ramses          1001        pharaoh         1001        =happyman       /home/ramses            /bin/sh         users,tty,mail,daemon,ftp     Interactive Administration
+iznogoud        1002        vizirs          1002        =happyman       /home/iznogoud          /bin/sh         users,tty,mail,ftp,ftp        Interactive Administration
+engineers       1003        engineers       1003        =happyman       /home/engineers         /bin/sh         users,tty,mail,ftp,ftp        Interactive Administration
+imhotep         1004        scribes         1004        =happyman       /home/imhotep           /bin/sh         users,tty,mail,ftp,ftp        Interactive Administration
+operative       1005        artists         1005        =happyman       /home/operative         /bin/sh         users,nobody                  Operator special privileges

@@ -1,0 +1,42 @@
+/dts-v1/;
+
+/ {
+	description = "RPi3 FIT Image";
+	#address-cells = <2>;
+
+	images {
+		kernel-1 {
+			description = "default kernel";
+			data = /incbin/("Image");
+			type = "kernel";
+			arch = "arm64";
+			os = "linux";
+			compression = "none";
+			load =  <0x00080000>;
+			entry = <0x00080000>;
+			signature {
+				algo = "sha256,rsa4096";
+				key-name-hint = "dev";
+			};
+		};
+		fdt-1 {
+			description = "device tree";
+			data = /incbin/("bcm2837-rpi-3-b.dtb");
+			type = "flat_dt";
+			arch = "arm64";
+			compression = "none";
+			signature {
+				algo = "sha256,rsa4096";
+				key-name-hint = "dev";
+			};
+		};
+	};
+	configurations {
+		default = "config-1";
+		config-1 {
+			description = "default config";
+			kernel = "kernel-1";
+			fdt = "fdt-1";
+		};
+	};
+};

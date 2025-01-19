@@ -218,6 +218,15 @@ $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-savedefconfig): %-savedefc
 $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-artifacts-release): %-artifacts-release: %-integration-test
 	$(Q)$(call MESSAGE,"[  Packaging $* board's artefacts]")
 
+$(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-fit-sigh): %-fit-sigh:
+	#$(Q)$(call MESSAGE,"[ Generate the $*'s keys to sign our configuration")
+	#$(Q)mkdir -pv $(BR2_EXTERNAL_CFSOS_PATH)/board/$*/configs/kernel-dts/keys
+	#$(Q)openssl genrsa -F4 -out $(BR2_EXTERNAL_CFSOS_PATH)/board/$*/configs/kernel-dts/keys/dev.key 2048
+	#$(Q)openssl req -batch -new -x509 -key $(BR2_EXTERNAL_CFSOS_PATH)/board/$*/configs/kernel-dts/keys/dev.key  -out $(BR2_EXTERNAL_CFSOS_PATH)/board/$*/configs/kernel-dts/keys//dev.crt
+	#$(Q)$(BLRT_OOSB)/$*-build-artifacts/host/bin/mkimage -f $(BR2_EXTERNAL_CFSOS_PATH)/board/$*/configs/kernel-dts/image.its -r $(BLRT_OOSB)/$*-build-artifacts/images/Image.fit
+##-subj "/C=FR/ST=IDF/L=Paris/O=ACME AHL/OU=IT/CN=dev"
+
+
 # ##################################################################################################################################
 # #
 # #                                     BR2 Clean goals
@@ -276,11 +285,14 @@ $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-checksum): %-checksum:
 
 $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-regenerate): %-regenerate:
 	$(Q)$(call MESSAGE,"[ Clean for regenerating $*  a new]")
-	#$(Q)rm -rf $(BLRT_OOSB)/$*-build-artifacts/target
-	#$(Q)find $(BLRT_OOSB)/$*-build-artifacts/ -name ".stamp_target_installed" -delete
-#	$(Q)rm -f =$(BLRT_OOSB)/$*-build-artifacts/build/host-gcc-final-*/.stamp_host_installed
+	$(Q)rm -rf $(BLRT_OOSB)/$*-build-artifacts/target
+	$(Q)rm -rf $(BLRT_OOSB)/$*-build-artifacts/images
+	$(Q)find $(BLRT_OOSB)/$*-build-artifacts/ \( -name ".stamp_target_installed" -o -name ".stamp_installed" \) -print -delete
 
 
+#$(Q)find $(BLRT_OOSB)/$*-build-artifacts/ -name ".stamp_installed" -print -delete
+#$(Q)find $(BLRT_OOSB)/$*-build-artifacts/ -name ".stamp_target_installed" -print -delete
+#$(Q)rm -f =$(BLRT_OOSB)/$*-build-artifacts/build/host-gcc-final-*/.stamp_host_installed
 
 # debug:
 # 	@[ -f $(O)/staging/.gdbinit ]    || cp $(CURDIR)/.gdbinit $(O)/staging/.gdbinit

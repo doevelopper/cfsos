@@ -63,7 +63,6 @@ BOARD_DIR                =  $(PWD)/$(BLRT_EXT)/board
 DATE                     := $(shell date +%Y.%m.%d-%H%M%S --utc)
 HOSTNAME                 := "archangel"
 VERSION_DATE             := $(shell date --utc +'%Y%m%d')
-VERSION_DEV              := dev$(VERSION_DATE)
 TOP_DIR                  := $(shell readlink -f .)
 USER                     := $(or $(UNIX_USER),ubuntu)
 UID                      := $(or $(UNIX_UID),$(shell id -u))
@@ -131,7 +130,11 @@ BLRT_MAKEARGS            +=  BR2_DL_DIR=$(BLRT_PACKAGE_DIR)/cache/dl
 # BLRT_MAKEARGS            +=  BR2_TARGET_GENERIC_HOSTNAME=$(HOSTNAME)
 # BLRT_MAKEARGS            +=  BR2_TOOLCHAIN_HEADERS_LATEST=y
 # BLRT_MAKEARGS            +=  BR2_TARGET_GENERIC_ISSUE="Core Real-Time Executive Multiprocessor Software System" 
-BLRT_MAKEARGS            +=  VERSION=$(VERSION)
+BLRT_MAKEARGS            +=  VERSION=$(NEW_VERSION_TAG)
+BLRT_MAKEARGS            +=  VERSION_MAJOR=$(HPS_MAJOR_TAG)
+BLRT_MAKEARGS            +=  VERSION_MINOR=$(HPS_MINOR_TAG)
+BLRT_MAKEARGS            +=  VERSION_PATCH=$(NEW_PATCH_VERSION)
+BLRT_MAKEARGS            +=  VERSION_POSTFIX=$(VERSION_POSTFIX)
 #BLRT_MAKEARGS           +=  O=$(BLRT_OOSB)/$(TARGET_BOARD)-build-artifacts
 VERSION_GIT_EPOCH        :=  $(shell $(GIT) log -1 --format=%at 2> /dev/null)
 # CPPFLAGS="-DVERSION='\"${VERSION_STRING}\"'" 
@@ -142,4 +145,3 @@ space			         :=${blank} ${blank}
 
 # Default dummy firmware encryption key
 ENC_KEY	                 := 1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
-

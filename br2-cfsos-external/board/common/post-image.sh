@@ -8,7 +8,7 @@ SCRIPT_DIR=${BR2_EXTERNAL_CFSOS_PATH}/board/common
 
 BOARD_DIR=${2}
 . "${BR2_EXTERNAL_CFSOS_PATH}/meta"
-. "${BOARD_DIR}/meta"
+. "${BR2_EXTERNAL_CFSOS_PATH}/board/neuron/rpi3-64/meta"
 . "${SCRIPT_DIR}/post-helpers.sh"
 
 BOOT_IMG="${BINARIES_DIR}/boot.vfat"
