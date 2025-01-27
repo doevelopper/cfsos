@@ -183,3 +183,17 @@ define _force
     endif
     $(1) := $(2)
 endef
+
+
+define GENERATE_CHECKSUM_AND_SIGNATURE
+$(Q)$(call MESSAGE,"[ Generating $* artifacts checksum, signatures...]")
+$(Q)$(eval FILES := $(wildcard $(BLRT_OOSB)/$*-build-artifacts/images/*))
+$(Q)$(foreach FILE,$(FILES),$(Q)sha256sum $(FILE) > $(FILE).sha256;)
+
+$(Q)$(foreach EXT,gz bz2 zip xz,\
+    $(Q)tar caf $(BLRT_OOSB)/$*-build-artifacts/images/$*.$(EXT) -C $(BLRT_OOSB)/$*-build-artifacts/images rootfs.ext2 Image;\
+    $(Q)gpg --detach-sign --armor $(BLRT_OOSB)/$*-build-artifacts/images/$*.$(EXT);\
+)
+
+$(Q)du -sch --time $(BLRT_OOSB)/$*-build-artifacts/images/*
+endef

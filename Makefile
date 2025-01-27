@@ -267,20 +267,19 @@ $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-upgrade): %-upgrade:
 	$(Q)$(call MESSAGE,"[ Upgrade $* ]")
 	$(Q)echo $(MAKE) $(BLRT_MAKEARGS) BR2_CCACHE_DIR=$(BLRT_PACKAGE_DIR)/cache/cc/$* O=$(BLRT_OOSB)/$*-build-artifacts $(subst $*-,,$@)
 
-
-
 $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-checksum): %-checksum:
 	$(Q)$(call MESSAGE,"[ Generating $* artifacts checksum, signatures...]")
-	$(Q)rm -f $(BLRT_OOSB)/$*-build-artifacts/images/*.{sha256,asc,tar.gz,tar.bz2,zip,tar.xz}
+	$(Q)rm -f $(BLRT_OOSB)/$*-build-artifacts/images/*.{sha256,asc,tar.gz,tar.bz2,zip,tar.xz,img.xz,raucb}
 	$(Q)for file in $(BLRT_OOSB)/$*-build-artifacts/images/*; do \
-		echo "Processing $$file..."; \
-		sha256sum $$file > $$file.sha256; \
+			echo "Processing $$file..."; \
+			sha256sum $$file > $$file.sha256; \
 		done
-
 	$(Q)for ext in gz bz2 zip xz; do \
 			tar -cavf $(BLRT_OOSB)/$*-build-artifacts/images/$*.tar.$$ext -C $(BLRT_OOSB)/$*-build-artifacts/images/ rootfs.ext2 Image; \
 			gpg --detach-sign --armor $(BLRT_OOSB)/$*-build-artifacts/images/$*.tar.$$ext; \
 		done
+	$(Q)du -sch --time $(BLRT_OOSB)/$*-build-artifacts/images/*
+
 # TODO  leverage this commands gpg --passphrase-file /path/to/passphrase.txt --detach-sign --armor ...
 
 $(foreach defconfig,$(SUPPORTED_TARGETS),$(defconfig)-regenerate): %-regenerate:
