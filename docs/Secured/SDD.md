@@ -14,12 +14,12 @@ This document describes the software design for a secure embedded Linux system r
 
 **1. Introduction**
 
-    This section sets the stage for the Software Design Description (SDD) by defining its purpose, scope, intended audience, and providing a brief overview of the robotic system the embedded Linux system will control.
+This section sets the stage for the Software Design Description (SDD) by defining its purpose, scope, intended audience, and providing a brief overview of the robotic system the embedded Linux system will control.
 
-    **1.1 Purpose**
+   **1.1 Purpose**
     The primary purpose of this Software Design Description (SDD) is to provide a comprehensive and detailed blueprint of the software architecture, components, interfaces, and security considerations for an embedded Linux system running on a Raspberry Pi 3. This system will serve as the central processing unit, or "brain," of a robotic/unmanned system. This document aims to be a single source of truth for all software-related aspects of the project, facilitating development, testing, integration, deployment, and maintenance. Furthermore, it explicitly emphasizes the security aspects of the system, addressing potential vulnerabilities and mitigation strategies.
 
-    **1.2 Scope**
+   **1.2 Scope**
     This SDD specifically covers the software components residing and executing on the Raspberry Pi 3. This includes:
     *   The embedded Linux operating system (OS) and its configuration.
     *   All application software developed for the robotic system.
@@ -31,7 +31,7 @@ This document describes the software design for a secure embedded Linux system r
     *   The development or design of external systems that may interact with the robot, except for the specification of the communication interfaces.
     *   Detailed implementation specifics like line-by-line code. This document focuses on the higher-level design.
 
-    **1.3 Intended Audience**
+   **1.3 Intended Audience**
     This document is intended for a diverse audience involved in the project, including but not limited to:
     *   **Software Developers:** Responsible for implementing the software components described in this document.
     *   **System Integrators:** Responsible for integrating the software components with the hardware and other systems.
@@ -40,7 +40,7 @@ This document describes the software design for a secure embedded Linux system r
     *   **Testers:** Responsible for verifying the functionality and security of the system.
     *   **Maintenance Personnel:** Responsible for maintaining and updating the system after deployment.
 
-    **1.4 System Overview**
+   **1.4 System Overview**
     *(This section requires specific details about the robotic system. I'll provide a template, and you should fill in the specifics.)*
     The robotic/unmanned system is designed to perform [ *Insert the primary function of the robot. Examples: autonomous navigation in a defined environment, remote surveillance and data collection, automated manipulation of objects, etc.* ]. It will operate in [ *Describe the operating environment. Examples: indoor environment, outdoor terrain, underwater, aerial, etc.* ] and will utilize [ *List key hardware components and sensors. Examples: cameras, LiDAR, GPS, IMU, motor controllers, etc.* ]. The Raspberry Pi 3 will act as the central control unit, processing sensor data, executing control algorithms, managing communication, and ensuring the overall safe and reliable operation of the robot. A high-level block diagram illustrating the interaction between the Raspberry Pi and other key components (sensors, actuators, communication interfaces, etc.) would be beneficial here (you can provide this later).
 
