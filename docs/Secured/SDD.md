@@ -12,15 +12,14 @@ Raspberry PI 3 is used as robotic/unmanned system's brain. I will give you each 
 
 This document describes the software design for a secure embedded Linux system running on a Raspberry Pi 3, intended for use as the brain of a robotic/unmanned system. It emphasizes security considerations throughout the design.
 
-**1. Introduction**
+1. **Introduction**
 
-This section sets the stage for the Software Design Description (SDD) by defining its purpose, scope, intended audience, and providing a brief overview of the robotic system the embedded Linux system will control.
+    This section sets the stage for the Software Design Description (SDD) by defining its purpose, scope, intended audience, and providing a brief overview of the robotic system the embedded Linux system will control.
 
-   **1.1 Purpose**
+   1.1. **Purpose**
+        The primary purpose of this Software Design Description (SDD) is to provide a comprehensive and detailed blueprint of the software architecture, components, interfaces, and security considerations for an embedded Linux system running on a Raspberry Pi 3. This system will serve as the central processing unit, or "brain," of a robotic/unmanned system. This document aims to be a single source of truth for all software-related aspects of the project, facilitating development, testing, integration, deployment, and maintenance. Furthermore, it explicitly emphasizes the security aspects of the system, addressing potential vulnerabilities and mitigation strategies.
 
-    The primary purpose of this Software Design Description (SDD) is to provide a comprehensive and detailed blueprint of the software architecture, components, interfaces, and security considerations for an embedded Linux system running on a Raspberry Pi 3. This system will serve as the central processing unit, or "brain," of a robotic/unmanned system. This document aims to be a single source of truth for all software-related aspects of the project, facilitating development, testing, integration, deployment, and maintenance. Furthermore, it explicitly emphasizes the security aspects of the system, addressing potential vulnerabilities and mitigation strategies.
-
-   **1.2 Scope**
+   1.2. **Scope**
 
     This SDD specifically covers the software components residing and executing on the Raspberry Pi 3. This includes:
     *   The embedded Linux operating system (OS) and its configuration.
@@ -33,8 +32,7 @@ This section sets the stage for the Software Design Description (SDD) by definin
     *   The development or design of external systems that may interact with the robot, except for the specification of the communication interfaces.
     *   Detailed implementation specifics like line-by-line code. This document focuses on the higher-level design.
 
-   **1.3 Intended Audience**
-
+   1.3. **Intended Audience**
     This document is intended for a diverse audience involved in the project, including but not limited to:
     *   **Software Developers:** Responsible for implementing the software components described in this document.
     *   **System Integrators:** Responsible for integrating the software components with the hardware and other systems.
@@ -43,7 +41,7 @@ This section sets the stage for the Software Design Description (SDD) by definin
     *   **Testers:** Responsible for verifying the functionality and security of the system.
     *   **Maintenance Personnel:** Responsible for maintaining and updating the system after deployment.
 
-   **1.4 System Overview**
+   1.4. **System Overview**
 
     *(This section requires specific details about the robotic system. I'll provide a template, and you should fill in the specifics.)*
     The robotic/unmanned system is designed to perform [ *Insert the primary function of the robot. Examples: autonomous navigation in a defined environment, remote surveillance and data collection, automated manipulation of objects, etc.* ]. It will operate in [ *Describe the operating environment. Examples: indoor environment, outdoor terrain, underwater, aerial, etc.* ] and will utilize [ *List key hardware components and sensors. Examples: cameras, LiDAR, GPS, IMU, motor controllers, etc.* ]. The Raspberry Pi 3 will act as the central control unit, processing sensor data, executing control algorithms, managing communication, and ensuring the overall safe and reliable operation of the robot. A high-level block diagram illustrating the interaction between the Raspberry Pi and other key components (sensors, actuators, communication interfaces, etc.) would be beneficial here (you can provide this later).
@@ -52,11 +50,11 @@ This section sets the stage for the Software Design Description (SDD) by definin
 
     The robotic/unmanned system is designed to perform *autonomous navigation within a warehouse environment for inventory management*. It will operate in *an indoor, controlled environment* and will utilize *a 2D LiDAR sensor for mapping and localization, an IMU for orientation, and stepper motors for movement*. The Raspberry Pi 3 will act as the central control unit, processing LiDAR data to create maps, localizing the robot within the map, planning paths, and controlling the stepper motors to navigate along the planned paths.
 
-**2. System Architecture**
+2. **System Architecture**
 
     This section describes the high-level software architecture of the embedded Linux system running on the Raspberry Pi 3. It outlines the key components and their interactions, with a strong emphasis on security considerations.
 
-    **2.1 Operating System and Kernel**
+    2.1. **Operating System and Kernel**
 
     *   **Distribution:** A minimal and hardened embedded Linux distribution will be used. Options include:
         *   **Yocto Project:** Provides maximum customization and control over the OS image, allowing for the removal of unnecessary packages and services, thus minimizing the attack surface. This is the highly recommended approach for security-sensitive applications.
@@ -70,7 +68,7 @@ This section sets the stage for the Software Design Description (SDD) by definin
         *   **Stack Protection:** Stack canaries or other stack protection mechanisms will be enabled to prevent stack buffer overflow attacks.
         *   **Secure Boot (If hardware supports it):** If the Raspberry Pi 3's bootloader and firmware support it (which is limited), Secure Boot will be implemented to ensure that only signed and trusted software can boot the system.
 
-    **2.2 Root Filesystem**
+    2.2. **Root Filesystem**
 
     *   **Read-Only Root Filesystem:** The root filesystem will be mounted as read-only to prevent unauthorized modifications. Only specific directories, such as `/var/log` (for logs) and `/tmp` (for temporary files), will be mounted as read-write. This greatly limits the impact of a successful intrusion.
     *   **Overlay Filesystem:** An overlay filesystem (e.g., OverlayFS) will be used to manage writable areas on top of the read-only root filesystem. This allows for persistent storage of configuration files and data without compromising the integrity of the base system.
@@ -124,7 +122,6 @@ This section sets the stage for the Software Design Description (SDD) by definin
 
 
 **3. Software Components**
-
 
 This section details the individual software components that will reside within the user space of the embedded Linux system on the Raspberry Pi 3. It describes their functionalities, interactions, and security considerations.
 
