@@ -116,12 +116,12 @@ This document describes the software design for a secure embedded Linux system r
     | +-------+ +-------+ +-------+ +-------+ +-------+ +-------+-----|
     | | R/O   | | Kernel| | Control| | Sensor| | Comm. | | Sec.  |
     | | RootFS| | Modules| | System| | Interf.| | Module| | Module|
-    | +-------+ +-------+ +-------+ +-------+ +-------+ +-------+
-    |         ^         ^         ^         ^         ^         ^
-    |         |         |         |         |         |         |
-    +---------+---------+---------+---------+---------+---------+
+    | +-------+ +-------+ +-------+ +-------+ +-------+ +-------+     |
+    |         ^         ^         ^         ^         ^         ^     |
+    |         |         |         |         |         |         |     |
+    +---------+---------+---------+---------+---------+---------+-----|
     |                     |                     |                     |
-    |        Hardware     |    External Systems    |     Human Interface    |
+    |        Hardware     |    External Systems | Human Interface     |
     +---------------------+---------------------+---------------------+
     ```
 
