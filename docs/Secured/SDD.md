@@ -17,6 +17,7 @@ This document describes the software design for a secure embedded Linux system r
     This section sets the stage for the Software Design Description (SDD) by defining its purpose, scope, intended audience, and providing a brief overview of the robotic system the embedded Linux system will control.
 
    1.1. **Purpose**
+
         The primary purpose of this Software Design Description (SDD) is to provide a comprehensive and detailed blueprint of the software architecture, components, interfaces, and security considerations for an embedded Linux system running on a Raspberry Pi 3. This system will serve as the central processing unit, or "brain," of a robotic/unmanned system. This document aims to be a single source of truth for all software-related aspects of the project, facilitating development, testing, integration, deployment, and maintenance. Furthermore, it explicitly emphasizes the security aspects of the system, addressing potential vulnerabilities and mitigation strategies.
 
    1.2. **Scope**
@@ -58,8 +59,10 @@ This document describes the software design for a secure embedded Linux system r
 
     *   **Distribution:** A minimal and hardened embedded Linux distribution will be used. Options include:
         *   **Yocto Project:** Provides maximum customization and control over the OS image, allowing for the removal of unnecessary packages and services, thus minimizing the attack surface. This is the highly recommended approach for security-sensitive applications.
+
         *   **Buildroot:** A simpler build system compared to Yocto, but still allows for significant customization.
         *   A highly stripped-down version of Raspberry Pi OS (formerly Raspbian) could be considered only if extreme resource constraints exist and after careful hardening. This is the least secure option.
+
     *   **Kernel Hardening:** The Linux kernel will be hardened to enhance security:
         *   **Configuration:** Unnecessary kernel modules will be disabled to reduce the attack surface and improve performance. This includes disabling modules related to unused hardware and network protocols.
         *   **Security Options:** Kernel configuration options related to security, such as `CONFIG_SECURITY_NETWORK`, `CONFIG_SECURITY_SELINUX` (if SELinux is used), will be enabled.
