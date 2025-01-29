@@ -45,7 +45,9 @@ This document describes the software design for a secure embedded Linux system r
    1.4. **System Overview**
 
     *(This section requires specific details about the robotic system. I'll provide a template, and you should fill in the specifics.)*
-    The robotic/unmanned system is designed to perform [ *Insert the primary function of the robot. Examples: autonomous navigation in a defined environment, remote surveillance and data collection, automated manipulation of objects, etc.* ]. It will operate in [ *Describe the operating environment. Examples: indoor environment, outdoor terrain, underwater, aerial, etc.* ] and will utilize [ *List key hardware components and sensors. Examples: cameras, LiDAR, GPS, IMU, motor controllers, etc.* ]. The Raspberry Pi 3 will act as the central control unit, processing sensor data, executing control algorithms, managing communication, and ensuring the overall safe and reliable operation of the robot. A high-level block diagram illustrating the interaction between the Raspberry Pi and other key components (sensors, actuators, communication interfaces, etc.) would be beneficial here (you can provide this later).
+    The robotic/unmanned system is designed to perform [ *Insert the primary function of the robot. Examples: autonomous navigation in a defined environment, remote surveillance and data collection, automated manipulation of objects, etc.* ]. 
+    It will operate in [ *Describe the operating environment. Examples: indoor environment, outdoor terrain, underwater, aerial, etc.* ] and will utilize [ *List key hardware components and sensors. Examples: cameras, LiDAR, GPS, IMU, motor controllers, etc.* ]. 
+    The Raspberry Pi 3 will act as the central control unit, processing sensor data, executing control algorithms, managing communication, and ensuring the overall safe and reliable operation of the robot. A high-level block diagram illustrating the interaction between the Raspberry Pi and other key components (sensors, actuators, communication interfaces, etc.) would be beneficial here (you can provide this later).
 
     **Example (Fill in your own details):**
 
