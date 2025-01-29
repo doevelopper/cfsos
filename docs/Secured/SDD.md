@@ -18,7 +18,7 @@ This document describes the software design for a secure embedded Linux system r
 
    1.1. **Purpose**
 
-        The primary purpose of this Software Design Description (SDD) is to provide a comprehensive and detailed blueprint of the software architecture, components, interfaces, and security considerations for an embedded Linux system running on a Raspberry Pi 3. This system will serve as the central processing unit, or "brain," of a robotic/unmanned system. This document aims to be a single source of truth for all software-related aspects of the project, facilitating development, testing, integration, deployment, and maintenance. Furthermore, it explicitly emphasizes the security aspects of the system, addressing potential vulnerabilities and mitigation strategies.
+    The primary purpose of this Software Design Description (SDD) is to provide a comprehensive and detailed blueprint of the software architecture, components, interfaces, and security considerations for an embedded Linux system running on a Raspberry Pi 3. This system will serve as the central processing unit, or "brain," of a robotic/unmanned system. This document aims to be a single source of truth for all software-related aspects of the project, facilitating development, testing, integration, deployment, and maintenance. Furthermore, it explicitly emphasizes the security aspects of the system, addressing potential vulnerabilities and mitigation strategies.
 
    1.2. **Scope**
 
