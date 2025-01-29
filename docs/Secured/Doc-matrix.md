@@ -1,6 +1,6 @@
 Creating a secure embedded Linux system requires a well-defined process and supporting documentation. Here's a suggested list of documents, in a logical order of creation and use, to guide the development of such a system:
 
-**1. Requirements Specification Document (ReqSpec):**
+1. **[Requirements Specification Document (ReqSpec)](<./docs/Secured/Requirements Specification Document.md>)**:
 
 *   **Purpose:** Defines the overall system requirements, including functional, performance, and *security* requirements. This is the foundation upon which all other documents are built.
 *   **Content:**
