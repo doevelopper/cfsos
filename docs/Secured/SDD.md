@@ -104,16 +104,16 @@ This document describes the software design for a secure embedded Linux system r
     ```
     +-----------------------------------------------------------------+
     |                                                                 |
-    |                     Robotic System Brain                      |
-    |                     (Raspberry Pi 3)                           |
+    |                     Robotic System Brain                        |
+    |                     (Raspberry Pi 3)                            |
     |                                                                 |
     +---------------------+---------------------+---------------------+
-    |     Bootloader     |   Linux Kernel      |    User Space       |
-    | (Secure Boot)      | (Hardened)        | (Sandboxed Apps)     |
-    +---------+---------+---------+---------+---------+---------+
-    |         |         |         |         |         |         |
-    |         V         V         V         V         V         V
-    | +-------+ +-------+ +-------+ +-------+ +-------+ +-------+
+    |     Bootloader     |   Linux Kernel      |    User Space        |
+    | (Secure Boot)      | (Hardened)        | (Sandboxed Apps)       |
+    +---------+---------+---------+---------+---------+---------+-----|
+    |         |         |         |         |         |         |     |
+    |         V         V         V         V         V         V     |
+    | +-------+ +-------+ +-------+ +-------+ +-------+ +-------+-----|
     | | R/O   | | Kernel| | Control| | Sensor| | Comm. | | Sec.  |
     | | RootFS| | Modules| | System| | Interf.| | Module| | Module|
     | +-------+ +-------+ +-------+ +-------+ +-------+ +-------+
