@@ -99,7 +99,7 @@ Creating a secure embedded Linux system requires a well-defined process and supp
     *   Password management guidelines
     *   Security alerts and notifications
 
-**[Order and Iteration](<./Order and Iteration.md>)**
+11. **[Order and Iteration](<./Order and Iteration.md>)**
 
 While this list provides a general order, the development process is often iterative. For example, the Threat Model might be revisited and updated as the design evolves. 
 The Security Test Plan should be developed concurrently with the SDD.
