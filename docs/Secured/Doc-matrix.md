@@ -10,7 +10,7 @@ Creating a secure embedded Linux system requires a well-defined process and supp
     *   Use cases
     *   Security requirements (e.g., confidentiality, integrity, availability, authentication, authorization, non-repudiation) – These should be specific and measurable.
 
-**2. Threat Model Document:**
+2. **[Threat Model Document](<./Threat-Model-Document.md>)**:
 
 *   **Purpose:** Identifies potential threats and vulnerabilities to the system. This is crucial for designing appropriate security mitigations.
 *   **Content:**
@@ -20,7 +20,7 @@ Creating a secure embedded Linux system requires a well-defined process and supp
     *   Vulnerability analysis
     *   Risk assessment (likelihood and impact of threats)
 
-**3. Software Design Description (SDD):**
+3. **[Software Design Description (SDD)](<./SDD.md>)**:
 
 *   **Purpose:** Describes the software architecture, components, and interfaces of the system, with a strong focus on security implementation.
 *   **Content:**
@@ -33,7 +33,7 @@ Creating a secure embedded Linux system requires a well-defined process and supp
     *   Trust boundaries
     *   Error handling and logging strategies (from a security perspective)
 
-**4. Security Test Plan:**
+4. **[Security Test Plan](<./Security Test Plan.md>)**
 
 *   **Purpose:** Defines how the security of the system will be tested and validated. This is based on the security requirements and threat model.
 *   **Content:**
@@ -44,7 +44,7 @@ Creating a secure embedded Linux system requires a well-defined process and supp
     *   Test procedures
     *   Acceptance criteria
 
-**5. Implementation Guide/Coding Standards:**
+5. **[Implementation Guide/Coding Standards](<./Implementation Guide Coding Standards.md>)**:
 
 *   **Purpose:** Provides guidelines for developers to ensure secure coding practices are followed.
 *   **Content:**
@@ -54,7 +54,7 @@ Creating a secure embedded Linux system requires a well-defined process and supp
     *   Vulnerability mitigation techniques
     *   Static and dynamic analysis tools to be used
 
-**6. Build and Deployment Guide:**
+6. **[Build and Deployment Guide](<./Build and Deployment Guide.md>)**
 
 *   **Purpose:** Describes the process of building, configuring, and deploying the system securely.
 *   **Content:**
@@ -63,7 +63,7 @@ Creating a secure embedded Linux system requires a well-defined process and supp
     *   Deployment procedures (including secure deployment mechanisms)
     *   Secure key management
 
-**7. Security Configuration Guide/Hardening Guide:**
+7. **[Security Configuration Guide/Hardening Guide](<./Security Configuration Guide Hardening Guide.md>)**
 
 *   **Purpose:** Provides detailed instructions on how to configure the system securely after deployment.
 *   **Content:**
@@ -72,7 +72,7 @@ Creating a secure embedded Linux system requires a well-defined process and supp
     *   Network security configuration
     *   Security logging and auditing configuration
 
-**8. Security Assessment Report:**
+8. **[Security Assessment Report](<./Security Assessment Report.md>)**
 
 *   **Purpose:** Documents the results of security testing and assessments.
 *   **Content:**
@@ -81,7 +81,7 @@ Creating a secure embedded Linux system requires a well-defined process and supp
     *   Risk assessment of vulnerabilities
     *   Recommendations for remediation
 
-**9. Incident Response Plan:**
+9. **[Incident Response Plan](<./Incident Response Plan.md>)**
 
 *   **Purpose:** Defines the procedures to be followed in case of a security incident.
 *   **Content:**
@@ -90,7 +90,7 @@ Creating a secure embedded Linux system requires a well-defined process and supp
     *   Communication plan
     *   Post-incident analysis
 
-**10. User Manual/Administrator Guide (with Security Considerations):**
+10. **[User Manual/Administrator Guide (with Security Considerations)](<./User Manual Administrator Guide - with Security Considerations-.md>)**
 
 *   **Purpose:** Provides instructions for users and administrators on how to use and manage the system securely.
 *   **Content:**
@@ -99,8 +99,8 @@ Creating a secure embedded Linux system requires a well-defined process and supp
     *   Password management guidelines
     *   Security alerts and notifications
 
-**Order and Iteration:**
+**[Order and Iteration](<./Order and Iteration.md>)**
 
-While this list provides a general order, the development process is often iterative. For example, the Threat Model might be revisited and updated as the design evolves. The Security Test Plan should be developed concurrently with the SDD.
+While this list provides a general order, the development process is often iterative. For example, the Threat Model might be revisited and updated as the design evolves. 
+The Security Test Plan should be developed concurrently with the SDD.
 
-By following this structured approach and creating these documents, you can significantly improve the security of your embedded Linux system and ensure that security is considered throughout the entire development lifecycle.
