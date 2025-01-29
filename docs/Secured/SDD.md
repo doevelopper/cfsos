@@ -109,7 +109,7 @@ This document describes the software design for a secure embedded Linux system r
     |                                                                 |
     +---------------------+---------------------+---------------------+
     |     Bootloader    |   Linux Kernel    |    User Space           |
-    | (Secure Boot)     | (Hardened)        | (Sandboxed Apps)        |
+    |   (Secure Boot)   |   (Hardened)      |  (Sandboxed Apps)       |
     +---------+---------+---------+---------+---------+---------+-----|
     |         |         |         |         |         |         |     |
     |         V         V         V         V         V         V     |
@@ -121,7 +121,7 @@ This document describes the software design for a secure embedded Linux system r
     |         |         |         |         |         |         |     |
     +---------+---------+---------+---------+---------+---------+-----|
     |                     |                     |                     |
-    |        Hardware     |    External Systems | Human Interface     |
+    |      Hardware       |    External Systems |   Human Interface   |
     +---------------------+---------------------+---------------------+
     ```
 
