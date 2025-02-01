@@ -223,3 +223,90 @@ graph TD
 - **Regular Security Updates** are applied by the Update Manager to ensure that any vulnerabilities in the system are addressed promptly.
 
 This expanded architecture ensures that the system not only starts securely and operates securely but also remains secure over time through regular updates and patch management.
+====================================================================================================================================================================================================
+
+Thank you for pointing that out. Let's enhance the sequence diagram to include the usage of OP-TEE (Open Portable Trusted Execution Environment) and ARM Trusted Firmware. These components are crucial for building a secure embedded Linux system on the Raspberry Pi 3.
+
+### Enhanced Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant User as User
+    participant RaspberryPi as Raspberry Pi 3
+    participant BootROM as BootROM
+    participant ARMTrustedFirmware as ARM Trusted Firmware
+    participant OPTEE as OP-TEE
+    participant Bootloader as Bootloader
+    participant SecureBoot as Secure Boot
+    participant Kernel as Kernel
+    participant RootFS as Root File System
+    participant Applications as Applications
+    participant RoboticControl as Robotic Control Software
+    participant SecurityModules as Security Modules
+    participant NetworkStack as Networking Stack
+    participant UpdateManager as Update Manager
+    
+    User->>RaspberryPi: Power On
+    RaspberryPi->>BootROM: Initialize Hardware
+    BootROM->>ARMTrustedFirmware: Load ARM Trusted Firmware
+    ARMTrustedFirmware->>OPTEE: Initialize OP-TEE
+    OPTEE-->>ARMTrustedFirmware: OP-TEE Initialized
+    ARMTrustedFirmware->>Bootloader: Load Bootloader
+    Bootloader->>SecureBoot: Verify Bootloader Integrity
+    SecureBoot-->>Bootloader: Bootloader Verified
+    Bootloader->>Kernel: Load Kernel
+    Kernel->>RootFS: Mount Root File System
+    RootFS->>Kernel: Root File System Mounted
+    Kernel->>Applications: Start User Space Applications
+    Applications->>RoboticControl: Load Robotic Control Software
+    Applications->>SecurityModules: Load Security Modules
+    Applications->>NetworkStack: Initialize Networking Stack
+    Applications->>UpdateManager: Initialize Update Manager
+    
+    loop Periodic Update Check
+        UpdateManager->>UpdateServer: Check for Updates
+        UpdateServer-->>UpdateManager: No Updates Available
+    end
+    
+    User->>RoboticControl: Send Control Commands
+    RoboticControl->>PeripheralControl: Actuate Motors/Sensors
+    PeripheralControl-->>RoboticControl: Motor/Sensor Data
+    RoboticControl->>NetworkStack: Send Status Updates
+    NetworkStack->>RemoteServer: Transmit Data
+    RemoteServer-->>NetworkStack: Acknowledge Data
+    
+    loop Security Monitoring
+        SecurityModules->>IDS: Monitor for Intrusions
+        IDS-->>SecurityModules: No Intrusions Detected
+    end
+    
+    loop Logging and Monitoring
+        SecurityModules->>LoggingService: Log System Events
+        LoggingService-->>SecurityModules: Events Logged
+    end
+    
+    loop Periodic Backup
+        StorageManagement->>BackupService: Perform Backup
+        BackupService-->>StorageManagement: Backup Completed
+    end
+```
+
+### Explanation:
+1. **User Power On**: The user powers on the Raspberry Pi 3.
+2. **BootROM Initialization**: The BootROM initializes the hardware.
+3. **ARM Trusted Firmware Loading**: The BootROM loads the ARM Trusted Firmware.
+4. **OP-TEE Initialization**: The ARM Trusted Firmware initializes the OP-TEE.
+5. **Bootloader Loading**: The ARM Trusted Firmware loads the bootloader.
+6. **Secure Boot Verification**: The secure boot process verifies the integrity of the bootloader.
+7. **Kernel Loading**: The bootloader loads the kernel.
+8. **Root File System Mounting**: The kernel mounts the root file system.
+9. **Application Initialization**: User-space applications, including robotic control software, security modules, networking stack, and update manager, are started.
+10. **Periodic Update Check**: The update manager periodically checks for software updates.
+11. **Control Commands**: The user sends control commands to the robotic control software.
+12. **Peripheral Control**: The robotic control software actuates motors and sensors and receives data.
+13. **Network Communication**: The robotic control software sends status updates through the networking stack to a remote server.
+14. **Security Monitoring**: Security modules monitor for intrusions.
+15. **Logging and Monitoring**: Security modules log system events.
+16. **Periodic Backup**: Storage management performs periodic backups.
+
+This enhanced sequence diagram now includes the initialization of OP-TEE and ARM Trusted Firmware, reflecting a more secure boot process and Trusted Execution Environment for the Raspberry Pi 3.

@@ -1,0 +1,74 @@
+graph TD
+    subgraph "Secure Embedded Linux System"
+        A[Hardware: Raspberry Pi 3] --> B[Bootloader]
+        B --> C[Secure Boot]
+        C --> D[Kernel]
+        D --> E[Root File System]
+        E --> F[Applications]
+        F --> G[Robotic Control Software]
+        F --> H[Security Modules]
+        F --> I[Networking Stack]
+        F --> Q[Storage Management]
+        F --> R[Peripheral Control]
+        F --> X[Update Manager]
+    end
+
+    subgraph "Security Features"
+        J[Secure Boot]
+        J --> B
+        K[Trusted Platform Module (TPM)]
+        K --> A
+        L[File System Encryption]
+        L --> E
+        M[SELinux/AppArmor]
+        M --> D
+        N[Firewall]
+        N --> I
+        O[Intrusion Detection System (IDS)]
+        O --> H
+        P[Regular Security Updates]
+        P --> X
+        S[VPN and Secure Communication Channels]
+        S --> I
+        T[Access Control Management]
+        T --> F
+        U[Logging and Monitoring]
+        U --> H
+        V[Backup and Recovery]
+        V --> Q
+        W[Data Integrity Checks]
+        W --> E
+    end
+
+    A -.-> K
+    D -.-> M
+    E -.-> L
+    E -.-> W
+    I -.-> N
+    I -.-> S
+    H -.-> O
+    H -.-> U
+    F -.-> P
+    F -.-> T
+    Q -.-> V
+    X -.-> P
+
+
+
+#R1
+graph TD
+    subgraph Hardware Security
+        A[Raspberry Pi 3] --> B[Secure Element/TPM]
+        A --> C[Sensors & Actuators]
+        A --> D[Communication Modules]
+    end
+
+    subgraph Secure Boot
+        E[Verified Bootloader U-Boot] --> F[Signed Kernel/Initramfs]
+    end
+
+    subgraph OS & Kernel Security
+        G[Minimal Linux Distro] --> H[SELinux/AppArmor]
+        G --> I[Kernel Module Restriction]
+        G --> J[Secure OS Updates]
+    end
