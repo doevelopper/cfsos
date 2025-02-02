@@ -1,3 +1,8 @@
+------
+ci CT CD 
+-------
+
+```mermaid
 graph TD
     A[Start] --> B{Git Flow Branching}
     B -- Feature Branch --> C[Feature Branch Pipeline]
@@ -31,3 +36,4 @@ graph TD
     subgraph Security
         I --> Z[Container Security Scan (e.g., Clair, Trivy)]
     end
+```
