@@ -4,6 +4,33 @@ Linux kernel, Uboot,optee_os, optee_ftpm,optee_client,trusted-firmware-a,rauc,Se
 Kindly generage a High-Level Architecture of the system using mermaid syntax. Kindly consider all cases you may find suitable foe the system
 -->
 ### QW 2.5 Max
+
+1. Hardware Layer:
+    - The Raspberry Pi 3B+ board is the hardware platform.
+    - The Secure Boot ROM ensures that only signed and trusted firmware is executed during the boot process.
+    - The Trusted Execution Environment (TEE) provides a secure area for executing sensitive operations.
+1. Bootloader:
+    - Trusted Firmware-A (TF-A): Initializes the hardware and sets up the secure world for OP-TEE.
+    - U-Boot: Loads the Linux kernel and device tree, ensuring the system boots securely.
+1. Secure Components:
+    - OP-TEE OS: The Trusted Execution Environment operating system that runs in the secure world.
+    - OP-TEE Client: Provides APIs for applications in the normal world to communicate with OP-TEE OS.
+    - OP-TEE FTPM: Implements a firmware TPM for secure key storage and cryptographic operations.
+1. Linux Kernel:
+    - The Linux kernel is the core of the operating system, managing hardware resources and providing system services.
+    - Device Tree: Describes the hardware configuration to the kernel.
+    - Security Modules: Includes SeLinux or AppArmor for mandatory access control.
+    - RAUC: Handles secure and reliable over-the-air (OTA) updates.
+1. User Space:
+    - Applications: User-space programs that interact with the system.
+    - SeLinux/AppArmor: Enforces security policies to restrict application behavior.
+    - Systemd: Manages system initialization and services.
+1. Key Considerations
+    - Secure Boot: Ensures that only authenticated and authorized firmware and software are loaded during the boot process.
+    - Trusted Execution Environment (TEE): Protects sensitive operations and data from the normal world.
+    - Security Modules: Provide fine-grained access control to protect the system from unauthorized access.
+    - RAUC: Ensures secure and robust updates to maintain system integrity over time.
+
 ```mermaid
 graph TD
     %% Define the main layers of the system
