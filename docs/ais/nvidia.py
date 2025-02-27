@@ -7,7 +7,8 @@ client = OpenAI(
 
 completion = client.chat.completions.create(
   model="deepseek-ai/deepseek-r1",
-  messages=[{"role":"user","content":"I would like you to help design  a secure design applicable to achieve a most secured embedded Linux system that runs on Raspberry PI 3.  The purpose is to use Raspberry PI 3 as   robotic/rover/unmanned system's brain. Kindly use mermaid syntax do design High-Level Architecture Diagram"}],
+  messages=[{"role":"user","content":
+    "I would like you to help design  a secure design applicable to achieve a most secured embedded Linux system that runs on Raspberry PI 3.  The purpose is to use Raspberry PI 3 as robotic/rover/unmanned system's brain. Kindly use mermaid syntax do design High-Level Architecture Diagram"}],
   temperature=0.6,
   top_p=0.7,
   max_tokens=4096,

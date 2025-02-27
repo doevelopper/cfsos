@@ -267,13 +267,74 @@ The following test cases will be executed:
     *   Verify the integrity of transmitted data.
     *   Test for vulnerabilities in communication protocols.
 
-**6. Test Schedule TBD**
+**6. Test Schedule**
 
-*   **Phase 1: Planning and Preparation:** 1 week
-*   **Phase 2: Vulnerability Scanning and Static Analysis:** 2 weeks
-*   **Phase 3: Penetration Testing and Dynamic Analysis:** 3 weeks
-*   **Phase 4: Reporting and Remediation:** 2 weeks
-*   **Phase 5: Retesting and Verification:** 1 week
+This section outlines the timeline for the security testing activities. It provides a structured schedule with estimated durations for each phase, ensuring that the testing process is conducted in a timely and organized manner.
+
+**6.1 Overall Timeline**
+
+The total estimated duration for the security testing process is [Insert Total Duration, e.g., 8-12 weeks]. This timeline is subject to change based on the complexity of the system, the number of vulnerabilities identified, and the availability of resources.
+
+**6.2 Phases and Durations**
+
+The security testing process will be divided into the following phases:
+
+* **Phase 1: Planning and Preparation ( [Duration, e.g., 1-2 weeks] )**
+    * This phase focuses on defining the test scope, developing test cases, setting up the test environment, and procuring necessary tools.
+    * Activities:
+        * Review and finalize the Security Test Plan.
+        * Develop detailed test cases based on the defined scope.
+        * Set up the test environment according to the specifications outlined in the "Test Environment" section.
+        * Install and configure the necessary testing tools.
+        * Conduct a kick-off meeting with the development team and stakeholders.
+
+* **Phase 2: Vulnerability Scanning and Static Analysis ( [Duration, e.g., 2-3 weeks] )**
+    * This phase focuses on automated vulnerability scanning and static code analysis to identify potential security flaws.
+    * Activities:
+        * Perform vulnerability scans using Nessus Essentials/OpenVAS and other relevant tools.
+        * Conduct static code analysis using Flawfinder, Bandit, and other appropriate tools.
+        * Analyze the results of the scans and analysis to identify potential vulnerabilities.
+        * Document the identified vulnerabilities and their severity levels.
+
+* **Phase 3: Penetration Testing and Dynamic Analysis ( [Duration, e.g., 3-4 weeks] )**
+    * This phase focuses on simulating real-world attacks and performing dynamic analysis to identify exploitable vulnerabilities.
+    * Activities:
+        * Conduct penetration testing using the Metasploit Framework and other relevant tools.
+        * Perform dynamic analysis by interacting with the running applications and using input fuzzing techniques.
+        * Analyze the results of the penetration testing and dynamic analysis.
+        * Document the identified vulnerabilities and their severity levels, including proof-of-concept exploits.
+
+* **Phase 4: Reporting and Remediation Planning ( [Duration, e.g., 1-2 weeks] )**
+    * This phase focuses on documenting the findings of the security testing process and developing a remediation plan.
+    * Activities:
+        * Generate a comprehensive security test report, including vulnerability descriptions, severity ratings, remediation recommendations, and test results.
+        * Present the security test report to the development team and stakeholders.
+        * Collaborate with the development team to develop a remediation plan, including timelines and responsibilities.
+
+* **Phase 5: Remediation and Retesting ( [Duration, e.g., 1-2 weeks] )**
+    * This phase focuses on implementing the remediation plan and retesting the system to verify the effectiveness of the fixes.
+    * Activities:
+        * The development team implements the remediation plan.
+        * Conduct retesting to verify that the identified vulnerabilities have been successfully mitigated.
+        * Document the results of the retesting.
+        * Generate a final security test report, including the results of the retesting.
+
+**6.3 Milestones**
+
+* [Insert Key Milestones, e.g., Completion of Test Case Development, Completion of Vulnerability Scanning, Completion of Penetration Testing, Completion of Remediation.]
+
+**6.4 Resource Allocation**
+
+* [Insert Resource Allocation Details, e.g., Number of Security Testers, Development Team Availability, Access to Test Environment.]
+
+**6.5 Contingency Planning**
+
+* [Insert Contingency Plans, e.g., Delays in Test Environment Setup, Unforeseen Vulnerabilities, Resource Constraints.]
+
+**6.6 Communication Plan**
+
+* [Insert Communication Plan, e.g., Regular Status Meetings, Reporting Procedures, Escalation Procedures.]
+
 
 **7. Reporting TBD**
 
